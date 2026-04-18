@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Блог TechRobot — авторские материалы об ИИ, роботах и технологиях от экспертов сообщества">
+  <title>Блог — TechRobot</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <style>
+    .page-main { padding-top: 70px; }
+
+    .page-hero {
+      padding: 3rem 0 2rem;
+      background: linear-gradient(180deg, var(--bg-dark2) 0%, var(--bg-dark) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Карточка блог-поста */
+    .blog-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .blog-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .blog-card-body { padding: 1.75rem; }
+
+    .blog-author-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .blog-author-avatar {
+      width: 38px;
+      height: 38px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .blog-author-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .blog-author-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .blog-card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+      transition: color var(--transition);
+    }
+
+    .blog-card:hover .blog-card-title { color: var(--primary); }
+
+    .blog-card-preview {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    /* Развёрнутое содержание */
+    .blog-full-content {
+      display: none;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .blog-full-content.open { display: block; }
+
+    /* Комментарии */
+    .blog-comments {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .blog-comment {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .blog-comment-avatar {
+      width: 32px;
+      height: 32px;
+      background: var(--bg-dark2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .blog-comment-body { flex: 1; }
+    .blog-comment-author { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+    .blog-comment-date   { font-size: 0.78rem; color: var(--text-muted); margin-left: 0.5rem; }
+    .blog-comment-text   { font-size: 0.88rem; color: var(--text-secondary); margin-top: 0.2rem; }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main class="page-main" id="main-content">
+
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Навигация">
+          <a href="index.html">Главная</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>Блог</span>
+        </nav>
+        <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:0.5rem;">Блог</h1>
+        <p style="color:var(--text-secondary);">Авторские материалы, личный опыт и мнения о технологиях</p>
+      </div>
+    </div>
+
+    <section class="section" aria-label="Записи блога">
+      <div class="container">
+        <div style="max-width:800px;margin:0 auto;">
+          <div id="blogList" style="display:flex;flex-direction:column;gap:1.5rem;min-height:400px;">
+            <div class="skeleton" style="height:200px;border-radius:var(--radius-xl);"></div>
+            <div class="skeleton" style="height:200px;border-radius:var(--radius-xl);"></div>
+            <div class="skeleton" style="height:200px;border-radius:var(--radius-xl);"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    'use strict';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const posts = await AppUtils.fetchData('data/blog.json');
+        renderBlog(posts);
+      } catch (err) {
+        AppUtils.showError('blogList', 'Не удалось загрузить блог');
+      }
+    });
+
+    function renderBlog(posts) {
+      const container = document.getElementById('blogList');
+      if (!container) return;
+
+      if (posts.length === 0) {
+        AppUtils.showEmpty('blogList', '✍️', 'Записей пока нет');
+        return;
+      }
+
+      container.innerHTML = posts.map(post => buildBlogCard(post)).join('');
+      AppUtils.initScrollAnimations();
+    }
+
+    function buildBlogCard(post) {
+      const badgeClass = AppUtils.getCategoryBadgeClass(post.category);
+      const date = AppUtils.formatDate(post.date);
+      const initials = post.author ? post.author.charAt(0).toUpperCase() : '?';
+      const commentsCount = (post.comments || []).length;
+
+      // Рендерим содержимое (хранится как HTML-строка)
+      const contentHtml = (post.content || '').replace(/<[^>]+>/g, ' ').slice(0, 800);
+
+      // Рендерим комментарии
+      const commentsHtml = post.comments && post.comments.length > 0
+        ? post.comments.map(c => `
+            <div class="blog-comment">
+              <div class="blog-comment-avatar">${c.author ? c.author.charAt(0).toUpperCase() : '?'}</div>
+              <div class="blog-comment-body">
+                <span class="blog-comment-author">${AppUtils.escapeHtml(c.author)}</span>
+                <span class="blog-comment-date">${AppUtils.formatDate(c.date)}</span>
+                <div class="blog-comment-text">${AppUtils.escapeHtml(c.text)}</div>
+              </div>
+            </div>
+          `).join('')
+        : '<p style="color:var(--text-muted);font-size:0.88rem;">Комментариев пока нет. Будьте первым!</p>';
+
+      return `
+        <article class="blog-card fade-in" onclick="togglePost(this)" aria-label="${AppUtils.escapeHtml(post.title)}">
+          <div class="blog-card-body">
+            <!-- Автор -->
+            <div class="blog-author-row">
+              <div class="blog-author-avatar">${initials}</div>
+              <div>
+                <div class="blog-author-name">${AppUtils.escapeHtml(post.author)}</div>
+                <div class="blog-author-date">${date}</div>
+              </div>
+              <div style="margin-left:auto;">
+                <span class="badge ${badgeClass}">${AppUtils.escapeHtml(post.categoryLabel)}</span>
+              </div>
+            </div>
+
+            <!-- Заголовок -->
+            <h2 class="blog-card-title">${AppUtils.escapeHtml(post.title)}</h2>
+
+            <!-- Превью -->
+            <p class="blog-card-preview">${AppUtils.escapeHtml(post.preview)}</p>
+
+            <!-- Мета -->
+            <div style="display:flex;align-items:center;gap:1rem;font-size:0.82rem;color:var(--text-muted);">
+              <span>💬 ${commentsCount} комментариев</span>
+              <span style="display:flex;align-items:center;gap:0.3rem;color:var(--primary);font-weight:600;">Читать далее ↓</span>
+            </div>
+
+            <!-- Полный текст (скрыт) -->
+            <div class="blog-full-content" onclick="event.stopPropagation()">
+              ${post.content || ''}
+
+              <!-- Теги -->
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);">
+                ${(post.tags || []).map(t => `<a href="search.html?q=${encodeURIComponent(t)}" class="tag" onclick="event.stopPropagation()">#${AppUtils.escapeHtml(t)}</a>`).join('')}
+              </div>
+
+              <!-- Комментарии -->
+              <div class="blog-comments">
+                <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--text-primary);">
+                  💬 Комментарии (${commentsCount})
+                </div>
+                ${commentsHtml}
+
+                <!-- Форма добавления комментария (только для авторизованных) -->
+                <div style="margin-top:1.25rem;" id="commentForm_${post.id}">
+                  <div style="font-size:0.85rem;color:var(--text-muted);">
+                    <a href="#" onclick="event.preventDefault();openAuthModal&&openAuthModal('login')" style="color:var(--primary);">Войдите</a>, чтобы оставить комментарий.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function togglePost(card) {
+      const content = card.querySelector('.blog-full-content');
+      if (!content) return;
+      const isOpen = content.classList.toggle('open');
+      const label = card.querySelector('[style*="color:var(--primary)"]');
+      if (label) label.textContent = isOpen ? 'Свернуть ↑' : 'Читать далее ↓';
+    }
+
+    window.togglePost = togglePost;
+  </script>
+</body>
+</html>

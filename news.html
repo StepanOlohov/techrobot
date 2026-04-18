@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Последние новости из мира технологий, робототехники и искусственного интеллекта">
+  <title>Новости — TechRobot</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <style>
+    .page-main { padding-top: 70px; }
+
+    .page-hero {
+      padding: 3rem 0 2rem;
+      background: linear-gradient(180deg, var(--bg-dark2) 0%, var(--bg-dark) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .news-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .news-main-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+    }
+
+    .news-sidebar {
+      position: sticky;
+      top: 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Полная карточка новости (расширенный вид) */
+    .news-full-item {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .news-full-item:last-child { border-bottom: none; }
+
+    .news-full-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .news-full-date {
+      flex-shrink: 0;
+      text-align: center;
+      min-width: 52px;
+    }
+
+    .news-full-body { flex: 1; }
+
+    .news-full-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    .news-full-title:hover { color: var(--primary); }
+
+    .news-full-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .news-full-content {
+      display: none;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding: 1rem;
+      background: var(--bg-dark2);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--primary);
+    }
+
+    .news-full-content.expanded { display: block; }
+
+    .news-read-more {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 0.5rem;
+      font-family: var(--font-main);
+      transition: color var(--transition);
+    }
+    .news-read-more:hover { color: var(--primary-dark); }
+
+    /* Фильтры */
+    .news-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media (max-width: 1024px) {
+      .news-layout {
+        grid-template-columns: 1fr;
+      }
+      .news-sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main class="page-main" id="main-content">
+
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Навигация">
+          <a href="index.html">Главная</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>Новости</span>
+        </nav>
+        <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:0.5rem;">Новости технологий</h1>
+        <p style="color:var(--text-secondary);">Актуальные события из мира ИИ, робототехники и передовых технологий</p>
+      </div>
+    </div>
+
+    <section class="section" aria-label="Лента новостей">
+      <div class="container">
+        <div class="news-layout">
+
+          <!-- Основная лента новостей -->
+          <div class="news-main-block">
+            <!-- Фильтры категорий -->
+            <div class="news-filters" role="group" aria-label="Фильтр новостей по категориям">
+              <button class="filter-btn active" data-cat="all" onclick="filterNews(this,'all')">Все</button>
+              <button class="filter-btn" data-cat="ai" onclick="filterNews(this,'ai')">🤖 ИИ</button>
+              <button class="filter-btn" data-cat="robotics" onclick="filterNews(this,'robotics')">⚙️ Роботы</button>
+              <button class="filter-btn" data-cat="drones" onclick="filterNews(this,'drones')">🚁 Дроны</button>
+              <button class="filter-btn" data-cat="vrar" onclick="filterNews(this,'vrar')">🥽 VR/AR</button>
+              <button class="filter-btn" data-cat="biotech" onclick="filterNews(this,'biotech')">🧬 Биотех</button>
+            </div>
+
+            <!-- Список новостей -->
+            <div id="newsList">
+              <!-- Скелетон загрузки -->
+              <div class="skeleton" style="height:100px;border-radius:var(--radius-md);margin-bottom:1rem;"></div>
+              <div class="skeleton" style="height:100px;border-radius:var(--radius-md);margin-bottom:1rem;"></div>
+              <div class="skeleton" style="height:100px;border-radius:var(--radius-md);margin-bottom:1rem;"></div>
+            </div>
+          </div>
+
+          <!-- Боковая панель -->
+          <aside class="news-sidebar">
+            <!-- Популярные теги -->
+            <div class="sidebar-block">
+              <div class="sidebar-title">Популярные теги</div>
+              <div style="display:flex;flex-wrap:wrap;gap:0.5rem;" id="newsTags">
+                <span class="tag">#ChatGPT</span>
+                <span class="tag">#OpenAI</span>
+                <span class="tag">#роботы</span>
+                <span class="tag">#Tesla</span>
+                <span class="tag">#ИИ</span>
+                <span class="tag">#БПЛА</span>
+                <span class="tag">#Waymo</span>
+                <span class="tag">#нейросети</span>
+                <span class="tag">#NVIDIA</span>
+                <span class="tag">#Яндекс</span>
+              </div>
+            </div>
+
+            <!-- Категории -->
+            <div class="sidebar-block">
+              <div class="sidebar-title">Разделы сайта</div>
+              <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                <a href="articles.html" style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;background:var(--bg-dark2);border-radius:var(--radius-sm);color:var(--text-secondary);text-decoration:none;font-size:0.9rem;transition:color 0.25s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">📝 Статьи</a>
+                <a href="robots.html" style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;background:var(--bg-dark2);border-radius:var(--radius-sm);color:var(--text-secondary);text-decoration:none;font-size:0.9rem;transition:color 0.25s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">🤖 Роботы</a>
+                <a href="videos.html" style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;background:var(--bg-dark2);border-radius:var(--radius-sm);color:var(--text-secondary);text-decoration:none;font-size:0.9rem;transition:color 0.25s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">🎬 Видео</a>
+                <a href="forum.html" style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;background:var(--bg-dark2);border-radius:var(--radius-sm);color:var(--text-secondary);text-decoration:none;font-size:0.9rem;transition:color 0.25s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">💬 Форум</a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    'use strict';
+
+    let allNewsData = [];
+
+    /* Загрузка и рендеринг новостей */
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        allNewsData = await AppUtils.fetchData('data/news.json');
+        renderNews(allNewsData);
+      } catch (err) {
+        AppUtils.showError('newsList', 'Не удалось загрузить новости');
+      }
+    });
+
+    function renderNews(news) {
+      const container = document.getElementById('newsList');
+      if (!container) return;
+
+      if (news.length === 0) {
+        AppUtils.showEmpty('newsList', '📰', 'Новостей не найдено');
+        return;
+      }
+
+      container.innerHTML = news.map(item => buildNewsItem(item)).join('');
+      AppUtils.initScrollAnimations();
+    }
+
+    function buildNewsItem(item) {
+      const { day, month } = AppUtils.formatDateShort(item.date);
+      const badgeClass = AppUtils.getCategoryBadgeClass(item.category);
+      const tagsHtml = (item.tags || []).map(t =>
+        `<span class="tag" style="font-size:0.75rem;">#${AppUtils.escapeHtml(t)}</span>`
+      ).join('');
+
+      return `
+        <div class="news-full-item fade-in" data-cat="${item.category}">
+          <div class="news-full-header">
+            <div class="news-full-date">
+              <div class="news-day">${day}</div>
+              <div class="news-month">${month}</div>
+            </div>
+            <div class="news-full-body">
+              <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;flex-wrap:wrap;">
+                <span class="badge ${badgeClass}" style="font-size:0.72rem;">${AppUtils.escapeHtml(item.categoryLabel)}</span>
+                ${item.source ? `<span style="font-size:0.78rem;color:var(--text-muted);">📰 ${AppUtils.escapeHtml(item.source)}</span>` : ''}
+              </div>
+              <h3 class="news-full-title" onclick="toggleNews(this)">${AppUtils.escapeHtml(item.title)}</h3>
+              <p class="news-full-text">${AppUtils.escapeHtml(item.preview)}</p>
+              <div class="news-full-content">${AppUtils.escapeHtml(item.content)}</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;flex-wrap:wrap;">
+                ${tagsHtml}
+                <button class="news-read-more" onclick="toggleNews(this.closest('.news-full-item').querySelector('.news-full-title'))">Читать подробнее ↓</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* Раскрыть/свернуть полный текст новости */
+    function toggleNews(titleEl) {
+      const item = titleEl.closest('.news-full-item');
+      const content = item.querySelector('.news-full-content');
+      const btn = item.querySelector('.news-read-more');
+      const isExpanded = content.classList.toggle('expanded');
+      if (btn) btn.textContent = isExpanded ? 'Свернуть ↑' : 'Читать подробнее ↓';
+    }
+
+    /* Фильтрация по категориям */
+    function filterNews(btn, category) {
+      document.querySelectorAll('.filter-btn[data-cat]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filtered = category === 'all'
+        ? allNewsData
+        : allNewsData.filter(n => n.category === category);
+
+      renderNews(filtered);
+    }
+
+    window.toggleNews  = toggleNews;
+    window.filterNews  = filterNews;
+  </script>
+</body>
+</html>

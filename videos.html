@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Видеотека о роботах и технологиях — демонстрации Boston Dynamics, Tesla Optimus, объяснения нейросетей и многое другое">
+  <title>Видеотека — TechRobot</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <style>
+    .page-main { padding-top: 70px; }
+
+    .page-hero {
+      padding: 3rem 0 2rem;
+      background: linear-gradient(180deg, var(--bg-dark2) 0%, var(--bg-dark) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Предупреждение об автовоспроизведении */
+    .video-notice {
+      background: rgba(0,212,255,0.06);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1.25rem;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* Фильтры */
+    .video-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    /* Статистика видео */
+    .video-stats {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main class="page-main" id="main-content">
+
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Навигация">
+          <a href="index.html">Главная</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>Видеотека</span>
+        </nav>
+        <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:0.5rem;">Видеотека</h1>
+        <p style="color:var(--text-secondary);">Лучшие видео о роботах, ИИ и технологиях будущего</p>
+      </div>
+    </div>
+
+    <section class="section" aria-label="Видеоматериалы">
+      <div class="container">
+
+        <!-- Предупреждение -->
+        <div class="video-notice">
+          <span>ℹ️</span>
+          Видео загружается с YouTube. При первом нажатии на плеер может потребоваться подключение к интернету.
+        </div>
+
+        <!-- Фильтры -->
+        <div class="video-filters" role="group" aria-label="Фильтр видео по категориям">
+          <button class="filter-btn active" onclick="filterVideos(this,'all')" data-cat="all">Все</button>
+          <button class="filter-btn" onclick="filterVideos(this,'robotics')" data-cat="robotics">⚙️ Роботы</button>
+          <button class="filter-btn" onclick="filterVideos(this,'ai')" data-cat="ai">🤖 ИИ</button>
+          <button class="filter-btn" onclick="filterVideos(this,'vrar')" data-cat="vrar">🥽 VR/AR</button>
+          <button class="filter-btn" onclick="filterVideos(this,'biotech')" data-cat="biotech">🧬 Биотех</button>
+        </div>
+
+        <!-- Сетка видео -->
+        <div id="videosGrid" class="grid-3" style="min-height:400px;">
+          <div class="skeleton" style="height:300px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:300px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:300px;border-radius:var(--radius-lg);"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    'use strict';
+
+    let allVideos = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        allVideos = await AppUtils.fetchData('data/videos.json');
+        renderVideos(allVideos);
+      } catch (err) {
+        AppUtils.showError('videosGrid', 'Не удалось загрузить видеотеку');
+      }
+    });
+
+    function renderVideos(videos) {
+      const container = document.getElementById('videosGrid');
+      if (!container) return;
+
+      if (videos.length === 0) {
+        AppUtils.showEmpty('videosGrid', '🎬', 'Видео не найдено');
+        return;
+      }
+
+      container.innerHTML = videos.map(v => buildVideoCard(v)).join('');
+      AppUtils.initScrollAnimations();
+    }
+
+    function buildVideoCard(video) {
+      const badgeClass = AppUtils.getCategoryBadgeClass(video.category);
+      const views = AppUtils.formatNumber(video.views);
+      const date = AppUtils.formatDate(video.date);
+
+      return `
+        <div class="video-card fade-in">
+          <div class="video-embed-wrapper">
+            <!-- iframe с YouTube (lazy loading) -->
+            <iframe
+              src="https://www.youtube.com/embed/${AppUtils.escapeHtml(video.youtubeId)}?rel=0&modestbranding=1"
+              title="${AppUtils.escapeHtml(video.title)}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+              aria-label="${AppUtils.escapeHtml(video.title)}"
+            ></iframe>
+          </div>
+          <div class="video-card-body">
+            <div style="margin-bottom:0.5rem;">
+              <span class="badge ${badgeClass}">${AppUtils.escapeHtml(video.categoryLabel)}</span>
+            </div>
+            <h3 class="video-card-title">${AppUtils.escapeHtml(video.title)}</h3>
+            <p class="video-card-desc">${AppUtils.escapeHtml(video.description)}</p>
+            <div class="video-card-meta">
+              <span>⏱ ${AppUtils.escapeHtml(video.duration)}</span>
+              <span>👁 ${views} просмотров</span>
+              <span>📅 ${date}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function filterVideos(btn, category) {
+      document.querySelectorAll('.filter-btn[data-cat]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filtered = category === 'all' ? allVideos : allVideos.filter(v => v.category === category);
+      renderVideos(filtered);
+    }
+
+    window.filterVideos = filterVideos;
+  </script>
+</body>
+</html>

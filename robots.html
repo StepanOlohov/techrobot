@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Каталог роботов — Atlas, Spot, da Vinci, Tesla Optimus, ASIMO и другие. Характеристики, цены, назначение.">
+  <title>Каталог роботов — TechRobot</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <style>
+    .page-main { padding-top: 70px; }
+
+    .page-hero {
+      padding: 3rem 0 2rem;
+      background: linear-gradient(180deg, var(--bg-dark2) 0%, var(--bg-dark) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Липкие фильтры */
+    .filters-bar {
+      background: var(--bg-dark2);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 70px;
+      z-index: 100;
+    }
+
+    .filters-inner {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-search {
+      position: relative;
+      min-width: 200px;
+      max-width: 280px;
+    }
+
+    .filter-search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .filter-search input {
+      padding-left: 2.5rem;
+      height: 38px;
+      font-size: 0.88rem;
+    }
+
+    /* Типы роботов (цветные бейджи фильтра) */
+    .filter-btn[data-type="research"].active  { background:rgba(0,212,255,0.15); border-color:var(--cat-ai); color:var(--cat-ai); }
+    .filter-btn[data-type="service"].active   { background:rgba(0,255,136,0.15); border-color:var(--cat-iot); color:var(--cat-iot); }
+    .filter-btn[data-type="medical"].active   { background:rgba(255,45,120,0.15); border-color:var(--cat-biotech); color:var(--cat-biotech); }
+    .filter-btn[data-type="military"].active  { background:rgba(255,204,0,0.15); border-color:var(--cat-drones); color:var(--cat-drones); }
+    .filter-btn[data-type="household"].active { background:rgba(255,107,53,0.15); border-color:var(--cat-vrar); color:var(--cat-vrar); }
+    .filter-btn[data-type="industrial"].active{ background:rgba(123,47,255,0.15); border-color:var(--cat-robotics); color:var(--cat-robotics); }
+
+    @media (max-width: 768px) {
+      .filters-inner { padding: 0.75rem 1rem; }
+      .filter-search { max-width: 100%; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main class="page-main" id="main-content">
+
+    <!-- Hero -->
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Навигация">
+          <a href="index.html">Главная</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>Каталог роботов</span>
+        </nav>
+        <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:0.5rem;">Каталог роботов</h1>
+        <p style="color:var(--text-secondary);">
+          Подробные характеристики роботов от ведущих производителей мира —
+          <span id="robotsCount" style="color:var(--primary);font-weight:600;"></span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Фильтры (sticky) -->
+    <div class="filters-bar" role="search" aria-label="Фильтры каталога роботов">
+      <div class="filters-inner">
+        <div class="filter-group" role="group" aria-label="Тип робота">
+          <button class="filter-btn active" data-type="all">Все</button>
+          <button class="filter-btn" data-type="research">🔬 Исследовательские</button>
+          <button class="filter-btn" data-type="service">🤝 Сервисные</button>
+          <button class="filter-btn" data-type="industrial">⚙️ Промышленные</button>
+          <button class="filter-btn" data-type="medical">🏥 Медицинские</button>
+          <button class="filter-btn" data-type="military">🎖️ Военные</button>
+          <button class="filter-btn" data-type="household">🏠 Бытовые</button>
+        </div>
+        <div class="filter-divider" aria-hidden="true"></div>
+        <div class="filter-search">
+          <span class="filter-search-icon" aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            id="robotsSearch"
+            class="form-input"
+            placeholder="Поиск по каталогу..."
+            aria-label="Поиск роботов"
+            maxlength="100"
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Сетка роботов -->
+    <section class="section" aria-label="Каталог роботов">
+      <div class="container">
+        <div id="robotsGrid" class="grid-4" style="min-height:400px;">
+          <!-- Скелетон-плейсхолдеры -->
+          <div class="skeleton" style="height:380px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:380px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:380px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:380px;border-radius:var(--radius-lg);"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/robots.js"></script>
+</body>
+</html>

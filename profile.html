@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Личный кабинет — управление профилем, избранное, история просмотров, мои темы">
+  <title>Личный кабинет — TechRobot</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <style>
+    .page-main { padding-top: 70px; }
+
+    .page-hero {
+      padding: 2rem 0;
+      background: linear-gradient(180deg, var(--bg-dark2) 0%, var(--bg-dark) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main class="page-main" id="main-content">
+
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Навигация">
+          <a href="index.html">Главная</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>Личный кабинет</span>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Основной контент профиля -->
+    <div id="profileMain">
+      <div class="container section">
+
+        <!-- Шапка профиля (заполняется profile.js) -->
+        <div id="profileHeader"></div>
+
+        <!-- Вкладки профиля -->
+        <div class="profile-tabs" role="tablist" aria-label="Разделы личного кабинета">
+          <button class="profile-tab active" data-tab="favorites" role="tab" aria-selected="true">
+            ❤️ Избранное
+          </button>
+          <button class="profile-tab" data-tab="history" role="tab" aria-selected="false">
+            📖 История
+          </button>
+          <button class="profile-tab" data-tab="forum" role="tab" aria-selected="false">
+            💬 Мои темы
+          </button>
+          <button class="profile-tab" data-tab="settings" role="tab" aria-selected="false">
+            ⚙️ Настройки
+          </button>
+        </div>
+
+        <!-- Панель "Избранное" -->
+        <div class="profile-panel" data-panel="favorites" role="tabpanel">
+          <div id="favoritesPanel" style="min-height:200px;">
+            <div class="loading-block"><div class="spinner"></div></div>
+          </div>
+        </div>
+
+        <!-- Панель "История" (скрыта) -->
+        <div class="profile-panel hidden" data-panel="history" role="tabpanel">
+          <div id="historyPanel" style="min-height:200px;"></div>
+        </div>
+
+        <!-- Панель "Мои темы" (скрыта) -->
+        <div class="profile-panel hidden" data-panel="forum" role="tabpanel">
+          <div id="forumPanel" style="min-height:200px;"></div>
+        </div>
+
+        <!-- Панель "Настройки" (скрыта) -->
+        <div class="profile-panel hidden" data-panel="settings" role="tabpanel">
+          <div id="settingsPanel" style="min-height:200px;"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

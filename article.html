@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Статья — TechRobot</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <style>
+    .page-main { padding-top: 70px; }
+
+    /* Макет статьи: контент + боковая панель */
+    .article-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    /* Контейнер с содержимым статьи */
+    .article-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+    }
+
+    /* Заголовок статьи */
+    .article-title-main {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-family: var(--font-heading);
+      font-weight: 900;
+      line-height: 1.25;
+      margin: 1rem 0;
+      color: var(--text-primary);
+    }
+
+    /* Мета-информация статьи */
+    .article-meta-bar {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 1.25rem 0;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+
+    /* Текст статьи */
+    .article-body {
+      line-height: 1.85;
+      font-size: 1rem;
+    }
+
+    /* Теги */
+    .article-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Кнопка "В избранное" */
+    .article-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Боковая панель */
+    .article-sidebar {
+      position: sticky;
+      top: 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Похожие статьи */
+    .related-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @media (max-width: 1024px) {
+      .article-layout {
+        grid-template-columns: 1fr;
+      }
+      .article-sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .article-wrapper {
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main class="page-main" id="main-content">
+    <div id="articleMain">
+      <div class="container section">
+
+        <!-- Хлебные крошки -->
+        <nav class="breadcrumb" id="articleBreadcrumb" aria-label="Навигация">
+          <a href="index.html">Главная</a>
+          <span class="breadcrumb-sep">›</span>
+          <a href="articles.html">Статьи</a>
+        </nav>
+
+        <div class="article-layout">
+          <!-- Основной контент -->
+          <div>
+            <div class="article-wrapper">
+              <!-- Категория -->
+              <div id="articleCategory"></div>
+
+              <!-- Hero изображение -->
+              <div id="articleHeroImg"></div>
+
+              <!-- Заголовок -->
+              <h1 class="article-title-main" id="articleTitle">
+                <div class="skeleton" style="height:2.5rem;border-radius:6px;margin-top:1rem;"></div>
+              </h1>
+
+              <!-- Мета-информация -->
+              <div class="article-meta-bar" id="articleMeta">
+                <div class="skeleton" style="height:1rem;width:300px;border-radius:4px;"></div>
+              </div>
+
+              <!-- Автор -->
+              <div id="articleAuthor"></div>
+
+              <!-- Содержание статьи -->
+              <div class="article-body" id="articleContent">
+                <div class="skeleton" style="height:1rem;margin-bottom:0.75rem;border-radius:4px;"></div>
+                <div class="skeleton" style="height:1rem;margin-bottom:0.75rem;width:90%;border-radius:4px;"></div>
+                <div class="skeleton" style="height:1rem;margin-bottom:0.75rem;width:95%;border-radius:4px;"></div>
+                <div class="skeleton" style="height:1rem;margin-bottom:0.75rem;width:85%;border-radius:4px;"></div>
+              </div>
+
+              <!-- Теги -->
+              <div class="article-tags" id="articleTags"></div>
+
+              <!-- Действия -->
+              <div class="article-actions">
+                <button id="favBtn" class="btn btn-secondary">
+                  <span>🤍</span> В избранное
+                </button>
+                <a href="articles.html" class="btn btn-ghost">← Все статьи</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Боковая панель -->
+          <aside class="article-sidebar" aria-label="Похожие статьи">
+            <div class="sidebar-block">
+              <div class="sidebar-title">Похожие статьи</div>
+              <div class="related-grid" id="relatedArticles">
+                <div class="skeleton" style="height:80px;border-radius:var(--radius-md);"></div>
+                <div class="skeleton" style="height:80px;border-radius:var(--radius-md);"></div>
+                <div class="skeleton" style="height:80px;border-radius:var(--radius-md);"></div>
+              </div>
+            </div>
+
+            <div class="sidebar-block">
+              <div class="sidebar-title">Категории</div>
+              <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                <a href="articles.html?category=ai" class="nav-link" style="border:1px solid var(--border);border-radius:var(--radius-md);">🤖 Искусственный интеллект</a>
+                <a href="articles.html?category=robotics" class="nav-link" style="border:1px solid var(--border);border-radius:var(--radius-md);">⚙️ Робототехника</a>
+                <a href="articles.html?category=iot" class="nav-link" style="border:1px solid var(--border);border-radius:var(--radius-md);">📡 Интернет вещей</a>
+                <a href="articles.html?category=vrar" class="nav-link" style="border:1px solid var(--border);border-radius:var(--radius-md);">🥽 VR / AR</a>
+                <a href="articles.html?category=biotech" class="nav-link" style="border:1px solid var(--border);border-radius:var(--radius-md);">🧬 Биотехнологии</a>
+                <a href="articles.html?category=drones" class="nav-link" style="border:1px solid var(--border);border-radius:var(--radius-md);">🚁 Беспилотники</a>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Секция похожих статей (широкая) -->
+        <section style="margin-top:3rem;" aria-labelledby="relatedTitle">
+          <div class="section-header">
+            <h2 class="section-title" id="relatedTitle" style="font-size:1.4rem;">Статьи по теме</h2>
+            <a href="articles.html" class="btn btn-ghost btn-sm">Все статьи →</a>
+          </div>
+          <div class="grid-3" id="relatedArticlesWide"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/article.js"></script>
+</body>
+</html>

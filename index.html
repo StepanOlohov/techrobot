@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TechRobot — информационный портал о современных технологиях и робототехнике. Статьи, новости, каталог роботов, видеотека и форум.">
+  <meta name="keywords" content="робототехника, искусственный интеллект, технологии, ИИ, роботы, IoT, VR, AR, беспилотники, биотехнологии">
+  <title>TechRobot — Мир технологий и робототехники</title>
+
+  <!-- Основные стили -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+
+  <!-- Font Awesome (иконки) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+
+  <style>
+    /* =============================================
+       Стили главной страницы
+       ============================================= */
+
+    /* Отступ сверху под фиксированную шапку */
+    .page-main {
+      padding-top: 70px;
+    }
+
+    /* --- Секция категорий --- */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+    }
+
+    /* --- Секция статистики (hero) --- */
+    .hero-stats {
+      gap: 2.5rem;
+    }
+
+    /* --- Блок "Последние новости" --- */
+    .news-sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+    }
+
+    /* --- Сетка "Статьи + Новости" --- */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* Баннер с призывом к регистрации */
+    .cta-banner {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(123, 47, 255, 0.08));
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(0, 212, 255, 0.03), transparent);
+      animation: rotateBg 20s linear infinite;
+    }
+    @keyframes rotateBg {
+      to { transform: rotate(360deg); }
+    }
+    .cta-banner-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 1024px) {
+      .categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Шапка вставляется через components.js -->
+  <div id="header-placeholder"></div>
+
+  <!-- Основной контент -->
+  <main class="page-main" id="main-content">
+
+    <!-- =============================================
+         HERO-СЕКЦИЯ
+         ============================================= -->
+    <section class="hero">
+      <div class="hero-bg">
+        <div class="hero-grid"></div>
+      </div>
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-label">
+            <span>⚡</span> Мир технологий будущего
+          </div>
+          <h1 class="hero-title">
+            Исследуй мир
+            <span class="text-gradient">технологий</span><br>
+            и <span class="text-gradient">робототехники</span>
+          </h1>
+          <p class="hero-subtitle">
+            Актуальные статьи, новости, каталог роботов и активное сообщество.
+            От ChatGPT до Boston Dynamics — всё о технологиях на одном портале.
+          </p>
+          <div class="hero-actions">
+            <a href="articles.html" class="btn btn-primary btn-lg">
+              📝 Читать статьи
+            </a>
+            <a href="robots.html" class="btn btn-secondary btn-lg">
+              🤖 Каталог роботов
+            </a>
+          </div>
+
+          <!-- Статистика -->
+          <div class="hero-stats">
+            <div>
+              <span class="hero-stat-number" data-counter="10" data-suffix="+">0</span>
+              <span class="hero-stat-label">статей</span>
+            </div>
+            <div>
+              <span class="hero-stat-number" data-counter="12" data-suffix="+">0</span>
+              <span class="hero-stat-label">роботов в каталоге</span>
+            </div>
+            <div>
+              <span class="hero-stat-number" data-counter="6" data-suffix="">0</span>
+              <span class="hero-stat-label">категорий технологий</span>
+            </div>
+            <div>
+              <span class="hero-stat-number" data-counter="15" data-suffix="+">0</span>
+              <span class="hero-stat-label">последних новостей</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================
+         КАТЕГОРИИ ТЕХНОЛОГИЙ
+         ============================================= -->
+    <section class="section section--sm" aria-labelledby="categoriesTitle">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="categoriesTitle">Категории технологий</h2>
+          <a href="articles.html" class="btn btn-ghost btn-sm">Все статьи →</a>
+        </div>
+
+        <div class="categories-grid">
+          <!-- Искусственный интеллект -->
+          <a href="articles.html?category=ai" class="category-card fade-in" data-cat="ai" aria-label="Статьи об искусственном интеллекте">
+            <div class="category-icon category-icon-ai">🤖</div>
+            <div class="category-name">Искусственный интеллект</div>
+            <div class="category-count">ChatGPT, нейросети, ML</div>
+          </a>
+
+          <!-- Робототехника -->
+          <a href="articles.html?category=robotics" class="category-card fade-in fade-in-delay-1" data-cat="robotics" aria-label="Статьи о робототехнике">
+            <div class="category-icon category-icon-robotics">⚙️</div>
+            <div class="category-name">Робототехника</div>
+            <div class="category-count">Atlas, Spot, Optimus</div>
+          </a>
+
+          <!-- IoT -->
+          <a href="articles.html?category=iot" class="category-card fade-in fade-in-delay-2" data-cat="iot" aria-label="Статьи об интернете вещей">
+            <div class="category-icon category-icon-iot">📡</div>
+            <div class="category-name">Интернет вещей</div>
+            <div class="category-count">Умный дом, Smart City</div>
+          </a>
+
+          <!-- VR/AR -->
+          <a href="articles.html?category=vrar" class="category-card fade-in fade-in-delay-3" data-cat="vrar" aria-label="Статьи о VR и AR">
+            <div class="category-icon category-icon-vrar">🥽</div>
+            <div class="category-name">VR / AR</div>
+            <div class="category-count">Vision Pro, Meta Quest</div>
+          </a>
+
+          <!-- Биотех -->
+          <a href="articles.html?category=biotech" class="category-card fade-in fade-in-delay-1" data-cat="biotech" aria-label="Статьи о биотехнологиях">
+            <div class="category-icon category-icon-biotech">🧬</div>
+            <div class="category-name">Биотехнологии</div>
+            <div class="category-count">CRISPR, генетика, медицина</div>
+          </a>
+
+          <!-- Беспилотники -->
+          <a href="articles.html?category=drones" class="category-card fade-in fade-in-delay-2" data-cat="drones" aria-label="Статьи о беспилотниках">
+            <div class="category-icon category-icon-drones">🚁</div>
+            <div class="category-name">Беспилотники</div>
+            <div class="category-count">Дроны, БПЛА, DJI</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================
+         ПОСЛЕДНИЕ СТАТЬИ + НОВОСТИ
+         ============================================= -->
+    <section class="section" aria-labelledby="latestTitle">
+      <div class="container">
+        <div class="content-grid">
+          <!-- Последние статьи -->
+          <div>
+            <div class="section-header">
+              <h2 class="section-title" id="latestTitle">Последние статьи</h2>
+              <a href="articles.html" class="btn btn-ghost btn-sm">Все статьи →</a>
+            </div>
+            <!-- Контейнер для статей (заполняется через home.js) -->
+            <div id="featuredArticles" class="grid-3" style="min-height:300px;">
+              <!-- Заглушка загрузки -->
+              <div class="skeleton" style="height:340px;border-radius:var(--radius-lg);"></div>
+              <div class="skeleton" style="height:340px;border-radius:var(--radius-lg);"></div>
+              <div class="skeleton" style="height:340px;border-radius:var(--radius-lg);"></div>
+            </div>
+          </div>
+
+          <!-- Панель последних новостей -->
+          <aside class="news-sidebar" aria-label="Последние новости">
+            <div class="section-header" style="margin-bottom:1rem;">
+              <h3 style="font-size:1.1rem;font-weight:700;padding-bottom:0.5rem;" class="section-title">Новости</h3>
+              <a href="news.html" class="btn btn-ghost btn-sm">Все →</a>
+            </div>
+            <!-- Контейнер для новостей (заполняется через home.js) -->
+            <div id="latestNews">
+              <div class="spinner" style="margin:2rem auto;display:block;"></div>
+            </div>
+            <a href="news.html" class="btn btn-secondary btn-sm" style="width:100%;margin-top:1rem;">Все новости →</a>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================
+         КАТАЛОГ РОБОТОВ (превью)
+         ============================================= -->
+    <section class="section" style="background:var(--bg-dark2);" aria-labelledby="robotsTitle">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="robotsTitle">Популярные роботы</h2>
+          <a href="robots.html" class="btn btn-ghost btn-sm">Весь каталог →</a>
+        </div>
+
+        <!-- Горизонтальный список роботов -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;" id="robotsPreview">
+          <!-- Карточки роботов (статичные для главной, без JS) -->
+          <div class="robot-card fade-in" onclick="location.href='robots.html?id=1'" style="cursor:pointer;">
+            <div class="robot-card-img-wrapper">
+              <div class="robot-img-placeholder"><span style="font-size:4rem;">🔬</span></div>
+              <div class="robot-card-type"><span class="badge badge-primary">Исследовательский</span></div>
+            </div>
+            <div class="robot-card-body">
+              <div class="robot-card-manufacturer">Boston Dynamics · 2013</div>
+              <h3 class="robot-card-name">Atlas</h3>
+              <p class="robot-card-desc">Самый продвинутый гуманоидный робот — сальто, паркур, танцы</p>
+            </div>
+            <div class="robot-card-footer">
+              <span class="robot-card-price">~2 000 000 $</span>
+              <button class="btn btn-secondary btn-sm">Подробнее</button>
+            </div>
+          </div>
+
+          <div class="robot-card fade-in fade-in-delay-1" onclick="location.href='robots.html?id=2'" style="cursor:pointer;">
+            <div class="robot-card-img-wrapper">
+              <div class="robot-img-placeholder"><span style="font-size:4rem;">🤝</span></div>
+              <div class="robot-card-type"><span class="badge badge-iot">Сервисный</span></div>
+            </div>
+            <div class="robot-card-body">
+              <div class="robot-card-manufacturer">Boston Dynamics · 2020</div>
+              <h3 class="robot-card-name">Spot</h3>
+              <p class="robot-card-desc">Четвероногий робот для инспекции промышленных объектов</p>
+            </div>
+            <div class="robot-card-footer">
+              <span class="robot-card-price">~74 500 $</span>
+              <button class="btn btn-secondary btn-sm">Подробнее</button>
+            </div>
+          </div>
+
+          <div class="robot-card fade-in fade-in-delay-2" onclick="location.href='robots.html?id=5'" style="cursor:pointer;">
+            <div class="robot-card-img-wrapper">
+              <div class="robot-img-placeholder"><span style="font-size:4rem;">🏥</span></div>
+              <div class="robot-card-type"><span class="badge badge-biotech">Медицинский</span></div>
+            </div>
+            <div class="robot-card-body">
+              <div class="robot-card-manufacturer">Intuitive Surgical · 1999</div>
+              <h3 class="robot-card-name">da Vinci</h3>
+              <p class="robot-card-desc">Хирургический робот — 10+ млн операций по всему миру</p>
+            </div>
+            <div class="robot-card-footer">
+              <span class="robot-card-price">~2 000 000 $</span>
+              <button class="btn btn-secondary btn-sm">Подробнее</button>
+            </div>
+          </div>
+
+          <div class="robot-card fade-in fade-in-delay-3" onclick="location.href='robots.html?id=11'" style="cursor:pointer;">
+            <div class="robot-card-img-wrapper">
+              <div class="robot-img-placeholder"><span style="font-size:4rem;">⚡</span></div>
+              <div class="robot-card-type"><span class="badge badge-primary">Исследовательский</span></div>
+            </div>
+            <div class="robot-card-body">
+              <div class="robot-card-manufacturer">Tesla · 2023</div>
+              <h3 class="robot-card-name">Optimus Gen 2</h3>
+              <p class="robot-card-desc">Гуманоидный робот Tesla — цель: 20 000 $ за экземпляр</p>
+            </div>
+            <div class="robot-card-footer">
+              <span class="robot-card-price">~20 000 $ (цель)</span>
+              <button class="btn btn-secondary btn-sm">Подробнее</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================
+         CTA — ПРИЗЫВ К РЕГИСТРАЦИИ
+         ============================================= -->
+    <section class="section" aria-labelledby="ctaTitle">
+      <div class="container">
+        <div class="cta-banner">
+          <div class="cta-banner-content">
+            <div class="hero-label" style="display:inline-flex;margin-bottom:1rem;">🚀 Присоединяйтесь</div>
+            <h2 class="hero-title" style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:1rem;" id="ctaTitle">
+              Создайте аккаунт и получите<br>доступ ко всем функциям
+            </h2>
+            <p style="color:var(--text-secondary);max-width:500px;margin:0 auto 2rem;">
+              Добавляйте статьи в избранное, создавайте темы на форуме,
+              сохраняйте историю просмотров и следите за новинками технологий
+            </p>
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+              <button class="btn btn-primary btn-lg" onclick="openAuthModal('register')">
+                Зарегистрироваться бесплатно
+              </button>
+              <a href="about.html" class="btn btn-ghost btn-lg">Узнать больше</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Подвал вставляется через components.js -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Скрипты (порядок важен!) -->
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

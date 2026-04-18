@@ -1,0 +1,177 @@
+/* =============================================
+   TECHROBOT — дополнительные стили страниц
+   Страница поиска, страница статьи, форум
+   ============================================= */
+
+/* =============================================
+   Страница поиска — элементы результатов
+   ============================================= */
+.search-result-icon.article-img-ai       { background: linear-gradient(135deg, #001a33, #001a20); }
+.search-result-icon.article-img-robotics { background: linear-gradient(135deg, #1a0033, #0d001a); }
+.search-result-icon.article-img-iot      { background: linear-gradient(135deg, #001a0d, #001409); }
+.search-result-icon.article-img-vrar     { background: linear-gradient(135deg, #2d1200, #1a0b00); }
+.search-result-icon.article-img-biotech  { background: linear-gradient(135deg, #2d0014, #1a000c); }
+.search-result-icon.article-img-drones   { background: linear-gradient(135deg, #1a1600, #100e00); }
+
+/* =============================================
+   Страница статьи — типография
+   ============================================= */
+.article-body h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 2rem 0 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.article-body p {
+  line-height: 1.85;
+  color: var(--text-secondary);
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+}
+
+.article-body ul,
+.article-body ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.article-body li {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  line-height: 1.65;
+}
+
+.article-body strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.article-body a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Блок-цитата */
+.article-body blockquote {
+  border-left: 4px solid var(--primary);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  background: rgba(0, 212, 255, 0.04);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.article-body blockquote p {
+  color: var(--text-primary);
+  font-style: italic;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* Таблица в статье */
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.article-body th,
+.article-body td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.article-body th {
+  background: var(--bg-dark2);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.article-body td {
+  color: var(--text-secondary);
+}
+
+.article-body tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Код в статье */
+.article-body code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  background: var(--bg-dark2);
+  border: 1px solid var(--border);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.88em;
+  color: var(--primary);
+}
+
+.article-body pre {
+  background: var(--bg-dark2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.article-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+/* =============================================
+   Блог — стили расширенного контента
+   ============================================= */
+.blog-full-content h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.blog-full-content p {
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.blog-full-content ul {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.blog-full-content li {
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+/* =============================================
+   Форум — выделение первого сообщения
+   ============================================= */
+#forumMessages .forum-message:first-child {
+  border-color: rgba(0, 212, 255, 0.2);
+  background: rgba(0, 212, 255, 0.02);
+}
+
+/* =============================================
+   Профиль — адаптивность панелей
+   ============================================= */
+@media (max-width: 768px) {
+  .profile-tabs {
+    gap: 0;
+  }
+
+  .profile-tab {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.82rem;
+  }
+}

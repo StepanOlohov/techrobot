@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Статьи о технологиях и робототехнике — ChatGPT, Boston Dynamics, IoT, VR/AR, биотехнологии и беспилотники">
+  <title>Статьи — TechRobot</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <style>
+    .page-main { padding-top: 70px; }
+
+    .page-hero {
+      padding: 3rem 0 2rem;
+      background: linear-gradient(180deg, var(--bg-dark2) 0%, var(--bg-dark) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Фильтры */
+    .filters-bar {
+      background: var(--bg-dark2);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 70px;
+      z-index: 100;
+    }
+
+    .filters-inner {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Поле поиска в фильтрах */
+    .filter-search {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+    .filter-search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+    .filter-search input {
+      padding-left: 2.5rem;
+      height: 38px;
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 768px) {
+      .filters-inner {
+        padding: 0.75rem 1rem;
+      }
+      .filter-search {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main class="page-main" id="main-content">
+
+    <!-- Hero секции статей -->
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Навигация">
+          <a href="index.html">Главная</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>Статьи</span>
+        </nav>
+        <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:0.5rem;">Статьи</h1>
+        <p style="color:var(--text-secondary);">
+          Глубокие материалы о технологиях, робототехнике и будущем —
+          <span id="articlesCount" style="color:var(--primary);font-weight:600;"></span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Панель фильтров (sticky) -->
+    <div class="filters-bar" role="search" aria-label="Фильтры статей">
+      <div class="filters-inner">
+        <!-- Фильтры по категориям -->
+        <div class="filter-group" role="group" aria-label="Фильтр по категориям">
+          <button class="filter-btn active" data-category="all">Все</button>
+          <button class="filter-btn" data-category="ai">🤖 ИИ</button>
+          <button class="filter-btn" data-category="robotics">⚙️ Роботы</button>
+          <button class="filter-btn" data-category="iot">📡 IoT</button>
+          <button class="filter-btn" data-category="vrar">🥽 VR/AR</button>
+          <button class="filter-btn" data-category="biotech">🧬 Биотех</button>
+          <button class="filter-btn" data-category="drones">🚁 Дроны</button>
+        </div>
+
+        <div class="filter-divider" aria-hidden="true"></div>
+
+        <!-- Поиск -->
+        <div class="filter-search">
+          <span class="filter-search-icon" aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            id="articlesSearch"
+            class="form-input"
+            placeholder="Поиск по статьям..."
+            aria-label="Поиск по статьям"
+            maxlength="100"
+          >
+        </div>
+
+        <!-- Сортировка -->
+        <div class="filters-right">
+          <select id="articlesSort" class="form-select" style="width:auto;height:38px;font-size:0.88rem;" aria-label="Сортировка">
+            <option value="date-desc">Новые сначала</option>
+            <option value="date-asc">Старые сначала</option>
+            <option value="views">По популярности</option>
+            <option value="readtime">По длине</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Сетка статей -->
+    <section class="section" aria-label="Список статей">
+      <div class="container">
+        <div id="articlesGrid" class="grid-3" style="min-height:400px;">
+          <!-- Скелетон-плейсхолдеры загрузки -->
+          <div class="skeleton" style="height:340px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:340px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:340px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:340px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:340px;border-radius:var(--radius-lg);"></div>
+          <div class="skeleton" style="height:340px;border-radius:var(--radius-lg);"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/articles.js"></script>
+</body>
+</html>
