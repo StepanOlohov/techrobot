@@ -143,7 +143,7 @@ function openRobotModal(robotId) {
 
   const modalHtml = `
     <div class="modal-overlay active" id="robotModal">
-      <div class="modal" style="max-width:640px;" role="dialog" aria-modal="true" aria-label="${AppUtils.escapeHtml(robot.name)}">
+      <div class="modal" style="max-width:640px;max-height:90vh;overflow-y:auto;" role="dialog" aria-modal="true" aria-label="${AppUtils.escapeHtml(robot.name)}">
         <div class="modal-header">
           <div>
             <div style="font-size:0.8rem;color:var(--primary);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem;">
@@ -155,7 +155,7 @@ function openRobotModal(robotId) {
         </div>
 
         <!-- Картинка робота -->
-        <div style="display:flex;align-items:center;justify-content:center;height:300px;background:linear-gradient(135deg,var(--bg-dark2),var(--bg-card));border-radius:var(--radius-lg);margin-bottom:1.5rem;overflow:hidden;padding:0.5rem;">
+        <div style="display:flex;align-items:center;justify-content:center;height:240px;background:linear-gradient(135deg,var(--bg-dark2),var(--bg-card));border-radius:var(--radius-lg);margin-bottom:1.5rem;overflow:hidden;padding:0.5rem;">
           ${robot.image
             ? `<img src="${AppUtils.escapeHtml(robot.image)}" alt="${AppUtils.escapeHtml(robot.name)}" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;" onerror="this.outerHTML='<span style=\\'font-size:6rem;\\'>${icon}</span>'">`
             : `<span style="font-size:6rem;">${icon}</span>`}
