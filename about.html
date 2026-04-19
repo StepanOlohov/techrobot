@@ -50,15 +50,17 @@
     /* Команда */
     .team-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 1fr;
       gap: 1.5rem;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .team-card {
       background: var(--bg-dark2);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 1.5rem;
+      padding: 2rem;
       text-align: center;
       transition: all var(--transition);
     }
@@ -68,22 +70,56 @@
     }
 
     .team-avatar {
-      width: 64px;
-      height: 64px;
+      width: 80px;
+      height: 80px;
       background: var(--gradient-primary);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.9rem;
       font-weight: 800;
       color: #000;
-      margin: 0 auto 1rem;
+      margin: 0 auto 1.25rem;
     }
 
-    .team-name { font-weight: 700; margin-bottom: 0.25rem; }
-    .team-role { font-size: 0.85rem; color: var(--primary); margin-bottom: 0.5rem; }
-    .team-bio  { font-size: 0.83rem; color: var(--text-muted); }
+    .team-name { font-weight: 700; font-size: 1.25rem; margin-bottom: 0.35rem; }
+    .team-role { font-size: 0.9rem; color: var(--primary); margin-bottom: 1rem; }
+    .team-bio  { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.25rem; }
+
+    .team-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .team-skill {
+      font-size: 0.78rem;
+      padding: 0.3rem 0.7rem;
+      background: var(--primary-glow);
+      color: var(--primary);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+
+    .team-socials {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .team-social {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .team-social:hover { color: var(--primary); }
 
     /* Контакты */
     .contacts-grid {
@@ -250,28 +286,34 @@
         <h2 class="about-section-title">Авторы</h2>
         <div class="team-grid">
           <div class="team-card">
-            <div class="team-avatar">А</div>
-            <div class="team-name">Алексей Петров</div>
-            <div class="team-role">Frontend-разработчик</div>
-            <div class="team-bio">Разработка архитектуры приложения, JS-модули, авторизация</div>
-          </div>
-          <div class="team-card">
-            <div class="team-avatar">М</div>
-            <div class="team-name">Мария Соколова</div>
-            <div class="team-role">UI/UX дизайнер</div>
-            <div class="team-bio">Дизайн-система, CSS, адаптивная вёрстка, компоненты</div>
-          </div>
-          <div class="team-card">
-            <div class="team-avatar">Д</div>
-            <div class="team-name">Дмитрий Волков</div>
-            <div class="team-role">Контент-редактор</div>
-            <div class="team-bio">Написание статей, наполнение каталога, JSON-данные</div>
-          </div>
-          <div class="team-card">
             <div class="team-avatar">О</div>
             <div class="team-name">Олохов Степан</div>
-            <div class="team-role">Автор проекта</div>
-            <div class="team-bio">Дипломная работа: архитектура, backend (Node.js + MySQL), деплой на VPS</div>
+            <div class="team-role">Full-stack разработчик · Автор проекта</div>
+            <div class="team-bio">
+              Единственный разработчик проекта TechRobot — от идеи до финального релиза. Занимался
+              полным циклом создания сайта: проектирование архитектуры, frontend-вёрстка и
+              дизайн-система, backend на Node.js + Express, работа с MySQL, настройка REST API,
+              развёртывание на VPS под управлением Nginx и PM2, а также наполнение сайта контентом.
+            </div>
+            <div class="team-skills">
+              <span class="team-skill">HTML5</span>
+              <span class="team-skill">CSS3</span>
+              <span class="team-skill">JavaScript</span>
+              <span class="team-skill">Node.js</span>
+              <span class="team-skill">Express</span>
+              <span class="team-skill">MySQL</span>
+              <span class="team-skill">Nginx</span>
+              <span class="team-skill">Linux</span>
+              <span class="team-skill">Git</span>
+            </div>
+            <div class="team-socials">
+              <a href="https://github.com/StepanOlohov" class="team-social" target="_blank" rel="noopener noreferrer">
+                <span>💻</span> GitHub
+              </a>
+              <a href="mailto:tiriiir886@gmail.com" class="team-social">
+                <span>✉️</span> Email
+              </a>
+            </div>
           </div>
         </div>
       </div>
