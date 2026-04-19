@@ -79,9 +79,9 @@ function buildRobotCard(robot) {
   return `
     <div class="robot-card fade-in" onclick="openRobotModal(${robot.id})" style="cursor:pointer;" role="button" tabindex="0" aria-label="${AppUtils.escapeHtml(robot.name)}">
       <div class="robot-card-img-wrapper">
-        <div class="robot-img-placeholder">
-          <span style="font-size:5rem;">${icon}</span>
-        </div>
+        ${robot.image
+          ? `<img src="${AppUtils.escapeHtml(robot.image)}" alt="${AppUtils.escapeHtml(robot.name)}" class="robot-card-img" loading="lazy" onerror="this.outerHTML='<div class=\\'robot-img-placeholder\\'><span style=\\'font-size:5rem;\\'>${icon}</span></div>'">`
+          : `<div class="robot-img-placeholder"><span style="font-size:5rem;">${icon}</span></div>`}
         <div class="robot-card-type">
           <span class="badge ${badgeClass}">${AppUtils.escapeHtml(robot.typeLabel)}</span>
         </div>
@@ -154,9 +154,11 @@ function openRobotModal(robotId) {
           <button class="modal-close" onclick="closeRobotModal()" aria-label="Закрыть">×</button>
         </div>
 
-        <!-- Иконка робота -->
-        <div style="display:flex;align-items:center;justify-content:center;height:160px;background:linear-gradient(135deg,var(--bg-dark2),var(--bg-card));border-radius:var(--radius-lg);margin-bottom:1.5rem;font-size:6rem;">
-          ${icon}
+        <!-- Картинка робота -->
+        <div style="display:flex;align-items:center;justify-content:center;height:260px;background:linear-gradient(135deg,var(--bg-dark2),var(--bg-card));border-radius:var(--radius-lg);margin-bottom:1.5rem;overflow:hidden;">
+          ${robot.image
+            ? `<img src="${AppUtils.escapeHtml(robot.image)}" alt="${AppUtils.escapeHtml(robot.name)}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='<span style=\\'font-size:6rem;\\'>${icon}</span>'">`
+            : `<span style="font-size:6rem;">${icon}</span>`}
         </div>
 
         <!-- Описание -->

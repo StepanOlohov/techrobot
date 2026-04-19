@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head><title>Генерация favicon</title></head>
+<body style="background:#222;color:#fff;font-family:sans-serif;padding:2rem;">
+<h2>Генерация favicon.png</h2>
+<canvas id="c" width="64" height="64" style="border:1px solid #555;"></canvas>
+<br><br>
+<a id="download" download="favicon.png" style="color:#00d4ff;font-size:1.2rem;">Скачать favicon.png</a>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const size = 64;
+
+// Фон
+ctx.fillStyle = '#0a0a0f';
+ctx.beginPath();
+ctx.roundRect(0, 0, size, size, 10);
+ctx.fill();
+
+// Градиент
+const grad = ctx.createLinearGradient(0, 0, size, size);
+grad.addColorStop(0, '#00d4ff');
+grad.addColorStop(1, '#7b2fff');
+
+// Шестиугольник
+ctx.strokeStyle = grad;
+ctx.lineWidth = 2.5;
+ctx.beginPath();
+const cx = 32, cy = 32, r = 22;
+for (let i = 0; i < 6; i++) {
+  const angle = (Math.PI / 3) * i - Math.PI / 2;
+  const x = cx + r * Math.cos(angle);
+  const y = cy + r * Math.sin(angle);
+  if (i === 0) ctx.moveTo(x, y);
+  else ctx.lineTo(x, y);
+}
+ctx.closePath();
+ctx.stroke();
+
+// Голова робота
+ctx.fillStyle = grad;
+ctx.beginPath();
+ctx.arc(32, 25, 7, 0, Math.PI * 2);
+ctx.fill();
+
+// Глаза
+ctx.fillStyle = '#0a0a0f';
+ctx.beginPath();
+ctx.arc(29.5, 24, 1.8, 0, Math.PI * 2);
+ctx.fill();
+ctx.beginPath();
+ctx.arc(34.5, 24, 1.8, 0, Math.PI * 2);
+ctx.fill();
+
+// Тело
+ctx.fillStyle = grad;
+ctx.beginPath();
+ctx.roundRect(25, 35, 14, 8, 2);
+ctx.fill();
+
+// Руки
+ctx.globalAlpha = 0.7;
+ctx.beginPath();
+ctx.roundRect(20, 34, 4, 10, 2);
+ctx.fill();
+ctx.beginPath();
+ctx.roundRect(40, 34, 4, 10, 2);
+ctx.fill();
+ctx.globalAlpha = 1;
+
+// Антенна
+ctx.strokeStyle = grad;
+ctx.lineWidth = 2;
+ctx.beginPath();
+ctx.moveTo(32, 18);
+ctx.lineTo(32, 13);
+ctx.stroke();
+ctx.fillStyle = grad;
+ctx.beginPath();
+ctx.arc(32, 12, 2, 0, Math.PI * 2);
+ctx.fill();
+
+// Ссылка для скачивания
+document.getElementById('download').href = canvas.toDataURL('image/png');
+</script>
+</body>
+</html>

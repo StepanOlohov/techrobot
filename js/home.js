@@ -94,6 +94,7 @@ async function loadLatestNews() {
     // Берём 5 последних новостей
     const latest = news.slice(0, 5);
     container.innerHTML = latest.map(item => buildNewsItem(item)).join('');
+    AppUtils.initScrollAnimations();
   } catch (err) {
     container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-title">Не удалось загрузить новости</div></div>`;
   }
