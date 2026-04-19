@@ -32,6 +32,7 @@ async function loadArticles() {
   AppUtils.showLoading('articlesGrid');
   try {
     allArticles = await AppUtils.fetchData('data/articles.json');
+    allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
     filteredArticles = [...allArticles];
     renderArticles();
   } catch (err) {

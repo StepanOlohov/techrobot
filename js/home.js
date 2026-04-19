@@ -26,6 +26,8 @@ async function loadFeaturedArticles() {
 
   try {
     const articles = await AppUtils.fetchData('data/articles.json');
+    // Сортируем по дате (новые сверху)
+    articles.sort((a, b) => new Date(b.date) - new Date(a.date));
     // Берём первые 3 статьи (featured или просто первые)
     const featured = articles
       .filter(a => a.featured)
@@ -91,7 +93,8 @@ async function loadLatestNews() {
 
   try {
     const news = await AppUtils.fetchData('data/news.json');
-    // Берём 5 последних новостей
+    // Сортируем по дате (новые сверху), берём первые 5
+    news.sort((a, b) => new Date(b.date) - new Date(a.date));
     const latest = news.slice(0, 5);
     container.innerHTML = latest.map(item => buildNewsItem(item)).join('');
     AppUtils.initScrollAnimations();

@@ -231,6 +231,7 @@
     document.addEventListener('DOMContentLoaded', async () => {
       try {
         allNewsData = await AppUtils.fetchData('data/news.json');
+        allNewsData.sort((a, b) => new Date(b.date) - new Date(a.date));
         renderNews(allNewsData);
       } catch (err) {
         AppUtils.showError('newsList', 'Не удалось загрузить новости');
