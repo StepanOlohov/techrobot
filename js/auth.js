@@ -119,6 +119,31 @@ function isLoggedIn() {
   return getToken() !== null && getCachedUser() !== null;
 }
 
+/**
+ * Подтягивает свежие данные пользователя с сервера и обновляет кэш.
+ * Используется для кросс-устройственной синхронизации: если на другом
+ * устройстве изменились избранное/история/профиль — здесь увидим актуальное.
+ *
+ * @returns {Promise<Object|null>} - свежий user или null
+ */
+async function syncCurrentUser() {
+  if (!getToken()) return null;
+
+  const data = await apiRequest('GET', '/me');
+
+  if (data.success && data.user) {
+    setCachedUser(data.user);
+    return data.user;
+  }
+
+  // Токен протух или недействителен — очищаем сессию
+  if (data.message === 'Не авторизован' || data.message === 'Токен недействителен') {
+    clearSession();
+  }
+
+  return null;
+}
+
 /* =============================================
    Регистрация (async → сервер)
    ============================================= */
@@ -576,6 +601,7 @@ function closeAuthModal() {
    ============================================= */
 window.AuthModule = {
   getCurrentUser,
+  syncCurrentUser,
   isLoggedIn,
   register,
   login,

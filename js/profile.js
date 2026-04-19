@@ -8,10 +8,20 @@
 let allArticles = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const user = getCurrentUser();
+  let user = getCurrentUser();
 
   if (!user) {
     // Не авторизован — показываем экран входа
+    renderLoginPrompt();
+    return;
+  }
+
+  // Синхронизируем с сервером — подтягиваем свежие избранное/историю/профиль
+  // с других устройств (если токен протух — syncCurrentUser вернёт null)
+  const fresh = await AuthModule.syncCurrentUser();
+  if (fresh) {
+    user = fresh;
+  } else if (!getToken()) {
     renderLoginPrompt();
     return;
   }
