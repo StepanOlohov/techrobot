@@ -155,9 +155,9 @@ function openRobotModal(robotId) {
         </div>
 
         <!-- Картинка робота -->
-        <div style="display:flex;align-items:center;justify-content:center;height:260px;background:linear-gradient(135deg,var(--bg-dark2),var(--bg-card));border-radius:var(--radius-lg);margin-bottom:1.5rem;overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:center;height:300px;background:linear-gradient(135deg,var(--bg-dark2),var(--bg-card));border-radius:var(--radius-lg);margin-bottom:1.5rem;overflow:hidden;padding:0.5rem;">
           ${robot.image
-            ? `<img src="${AppUtils.escapeHtml(robot.image)}" alt="${AppUtils.escapeHtml(robot.name)}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='<span style=\\'font-size:6rem;\\'>${icon}</span>'">`
+            ? `<img src="${AppUtils.escapeHtml(robot.image)}" alt="${AppUtils.escapeHtml(robot.name)}" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;" onerror="this.outerHTML='<span style=\\'font-size:6rem;\\'>${icon}</span>'">`
             : `<span style="font-size:6rem;">${icon}</span>`}
         </div>
 
