@@ -168,7 +168,7 @@ function buildFooterHTML() {
         <!-- Нижняя панель подвала -->
         <div class="footer-bottom">
           <div class="footer-copyright">
-            © 2024 TechRobot. Дипломный проект. Все материалы носят образовательный характер.
+            © 2026 TechRobot. Все права защищены.
           </div>
           <div class="footer-bottom-links">
             <a href="about.html">Политика конфиденциальности</a>
