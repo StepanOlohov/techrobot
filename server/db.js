@@ -81,6 +81,19 @@ async function initTables() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
 
+    // Таблица обращений через форму обратной связи
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS contact_messages (
+        id         INT AUTO_INCREMENT PRIMARY KEY,
+        name       VARCHAR(100) NOT NULL,
+        email      VARCHAR(255) NOT NULL,
+        subject    VARCHAR(50)  NOT NULL DEFAULT 'other',
+        message    TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_created (created_at)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
     console.log('✅ Таблицы базы данных готовы');
   } finally {
     conn.release();

@@ -10,6 +10,7 @@
  *   POST   /api/favorites/:id      — добавить / убрать из избранного
  *   POST   /api/history/:id        — добавить в историю просмотров
  *   DELETE /api/history             — очистить историю
+ *   POST   /api/contact            — форма обратной связи
  */
 
 'use strict';
@@ -304,6 +305,46 @@ app.delete('/api/history', auth, async (req, res) => {
   } catch (err) {
     console.error('Ошибка очистки истории:', err);
     res.status(500).json({ success: false, message: 'Ошибка сервера' });
+  }
+});
+
+/* =============================================
+   POST /api/contact — Форма обратной связи
+   ============================================= */
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+
+    if (!name || !email || !message) {
+      return res.status(400).json({ success: false, message: 'Заполните обязательные поля' });
+    }
+    if (name.trim().length < 2) {
+      return res.status(400).json({ success: false, message: 'Имя должно содержать не менее 2 символов' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ success: false, message: 'Введите корректный email' });
+    }
+    if (message.trim().length < 10) {
+      return res.status(400).json({ success: false, message: 'Сообщение должно содержать не менее 10 символов' });
+    }
+    if (message.length > 1000) {
+      return res.status(400).json({ success: false, message: 'Сообщение слишком длинное (макс. 1000 символов)' });
+    }
+
+    const allowedSubjects = ['question', 'suggestion', 'error', 'cooperation', 'other'];
+    const safeSubject = allowedSubjects.includes(subject) ? subject : 'other';
+
+    const pool = db.getPool();
+    await pool.query(
+      'INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)',
+      [name.trim(), email.toLowerCase().trim(), safeSubject, message.trim()]
+    );
+
+    res.status(201).json({ success: true, message: 'Сообщение отправлено' });
+
+  } catch (err) {
+    console.error('Ошибка /api/contact:', err);
+    res.status(500).json({ success: false, message: 'Внутренняя ошибка сервера' });
   }
 });
 

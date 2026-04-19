@@ -365,8 +365,8 @@
               <div style="font-size:0.88rem;color:var(--text-secondary);">Ответы на обращения: Пн–Пт, 10:00–18:00 МСК</div>
             </div>
             <div style="padding:1.5rem;background:var(--bg-dark2);border-radius:var(--radius-lg);border:1px solid var(--border);">
-              <div style="font-weight:700;margin-bottom:0.5rem;">⚠️ Важно</div>
-              <div style="font-size:0.88rem;color:var(--text-secondary);">Это учебный проект. Форма обратной связи работает демонстрационно — данные сохраняются только в localStorage вашего браузера и никуда не отправляются.</div>
+              <div style="font-weight:700;margin-bottom:0.5rem;">🔒 Конфиденциальность</div>
+              <div style="font-size:0.88rem;color:var(--text-secondary);">Ваши данные сохраняются на защищённом сервере и используются только для ответа на обращение. Мы не передаём информацию третьим лицам.</div>
             </div>
             <div style="padding:1.5rem;background:var(--bg-dark2);border-radius:var(--radius-lg);border:1px solid var(--border);">
               <div style="font-weight:700;margin-bottom:0.75rem;">📋 Наши запросы</div>
@@ -397,11 +397,12 @@
       const form = document.getElementById('contactForm');
       if (!form) return;
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const name    = document.getElementById('contactName').value.trim();
         const email   = document.getElementById('contactEmail').value.trim();
+        const subject = document.getElementById('contactSubject').value;
         const message = document.getElementById('contactMessage').value.trim();
 
         // Сброс ошибок
@@ -410,41 +411,46 @@
 
         let hasErrors = false;
 
-        // Валидация имени
         if (name.length < 2) {
           showFieldError('contactName', 'Введите ваше имя (минимум 2 символа)');
           hasErrors = true;
         }
-
-        // Валидация email
         const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRe.test(email)) {
           showFieldError('contactEmail', 'Введите корректный email');
           hasErrors = true;
         }
-
-        // Валидация сообщения
         if (message.length < 10) {
           showFieldError('contactMessage', 'Сообщение должно содержать не менее 10 символов');
           hasErrors = true;
         }
-
         if (hasErrors) return;
 
-        // "Сохраняем" в localStorage (демо)
-        const submissions = JSON.parse(localStorage.getItem('tr_contact_submissions') || '[]');
-        submissions.push({
-          name, email,
-          subject: document.getElementById('contactSubject').value,
-          message,
-          date: new Date().toISOString()
-        });
-        localStorage.setItem('tr_contact_submissions', JSON.stringify(submissions));
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Отправка...';
 
-        // Показываем успех
-        form.style.display = 'none';
-        document.getElementById('formSuccess').style.display = 'block';
-        AppUtils.showToast('Сообщение отправлено! (сохранено локально)', 'success');
+        try {
+          const response = await fetch('/api/contact', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ name, email, subject, message })
+          });
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.message || 'Не удалось отправить сообщение');
+          }
+
+          form.style.display = 'none';
+          document.getElementById('formSuccess').style.display = 'block';
+          AppUtils.showToast('Сообщение отправлено!', 'success');
+        } catch (err) {
+          AppUtils.showToast(err.message || 'Ошибка отправки', 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
       });
     });
 
