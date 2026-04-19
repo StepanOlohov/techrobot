@@ -15,7 +15,6 @@ const NAV_ITEMS = [
   { href: 'news.html',        label: 'Новости',   icon: '📰' },
   { href: 'robots.html',      label: 'Роботы',    icon: '🤖' },
   { href: 'videos.html',      label: 'Видео',     icon: '🎬' },
-  { href: 'forum.html',       label: 'Форум',     icon: '💬' },
   { href: 'blog.html',        label: 'Блог',      icon: '✍️' },
   { href: 'about.html',       label: 'О нас',     icon: '📌' }
 ];
@@ -137,7 +136,6 @@ function buildFooterHTML() {
               <li><a href="news.html">Новости</a></li>
               <li><a href="robots.html">Каталог роботов</a></li>
               <li><a href="videos.html">Видеотека</a></li>
-              <li><a href="forum.html">Форум</a></li>
               <li><a href="blog.html">Блог</a></li>
             </ul>
           </div>

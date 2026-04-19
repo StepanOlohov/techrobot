@@ -113,7 +113,6 @@ function initTabs() {
 
       if (target === 'favorites')  renderFavorites(user);
       if (target === 'history')    renderHistory(user);
-      if (target === 'forum')      renderMyTopics(user);
       if (target === 'settings')   renderSettings(user);
     });
   });
@@ -215,54 +214,6 @@ async function clearHistory() {
 }
 
 window.clearHistory = clearHistory;
-
-/* =============================================
-   Панель "Мои темы на форуме"
-   ============================================= */
-async function renderMyTopics(user) {
-  const container = document.getElementById('forumPanel');
-  if (!container) return;
-
-  container.innerHTML = '<div class="loading-block"><div class="spinner"></div></div>';
-
-  try {
-    const raw = localStorage.getItem('tr_forum_topics');
-    const topics = raw ? JSON.parse(raw) : await fetch('data/forum.json').then(r => r.json());
-    const myTopics = topics.filter(t => t.author === user.email);
-
-    if (myTopics.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-icon">💬</div>
-          <div class="empty-state-title">Вы ещё не создавали темы</div>
-          <a href="forum.html" class="btn btn-primary btn-sm">Перейти на форум</a>
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = myTopics.map(topic => {
-      const msgCount = (topic.messages || []).length;
-      const badgeClass = AppUtils.getCategoryBadgeClass(topic.category);
-      return `
-        <a href="forum-topic.html?id=${topic.id}" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);text-decoration:none;margin-bottom:0.75rem;transition:all 0.25s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:1.5rem;">💬</span>
-          <div style="flex:1;">
-            <span class="badge ${badgeClass}" style="font-size:0.72rem;margin-bottom:0.25rem;display:inline-flex;">${AppUtils.escapeHtml(topic.categoryLabel)}</span>
-            <div style="font-weight:600;color:var(--text-primary);">${AppUtils.escapeHtml(topic.title)}</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);">📅 ${AppUtils.formatDate(topic.date)}</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-weight:700;color:var(--primary);">${msgCount}</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">ответов</div>
-          </div>
-        </a>
-      `;
-    }).join('');
-  } catch (err) {
-    container.innerHTML = '<p style="color:var(--text-muted);">Не удалось загрузить темы</p>';
-  }
-}
 
 /* =============================================
    Панель настроек
