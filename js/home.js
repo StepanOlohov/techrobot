@@ -72,7 +72,6 @@ function buildArticleCard(article) {
         <div class="article-card-footer">
           <div class="article-card-info">
             <span>📅 ${date}</span>
-            <span>👁 ${AppUtils.formatNumber(article.views)}</span>
           </div>
           <button class="favorite-btn ${isFav ? 'active' : ''}"
             onclick="handleFavorite(event, ${article.id}, this)"

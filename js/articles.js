@@ -96,7 +96,6 @@ function buildArticleCard(article) {
         <div class="article-card-footer">
           <div class="article-card-info">
             <span>📅 ${date}</span>
-            <span>👁 ${AppUtils.formatNumber(article.views)}</span>
           </div>
           <button class="favorite-btn ${isFav ? 'active' : ''}"
             onclick="handleFavClick(event, ${article.id}, this)"
@@ -189,7 +188,6 @@ function sortArticles(articles, sortKey) {
   switch (sortKey) {
     case 'date-desc': return arr.sort((a, b) => new Date(b.date) - new Date(a.date));
     case 'date-asc':  return arr.sort((a, b) => new Date(a.date) - new Date(b.date));
-    case 'views':     return arr.sort((a, b) => (b.views || 0) - (a.views || 0));
     case 'readtime':  return arr.sort((a, b) => (a.readTime || 0) - (b.readTime || 0));
     default:          return arr;
   }

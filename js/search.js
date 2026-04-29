@@ -65,12 +65,11 @@ function performSearch(query) {
 
   const q = query.trim();
 
-  // Поиск по статьям (заголовок, превью, теги, категория, автор)
+  // Поиск по статьям (заголовок, превью, теги, категория)
   const articles = allArticles.filter(a =>
     matchesQuery(a.title, q) ||
     matchesQuery(a.preview, q) ||
     matchesQuery(a.categoryLabel, q) ||
-    matchesQuery(a.author, q) ||
     (a.tags || []).some(tag => matchesQuery(tag, q))
   );
 

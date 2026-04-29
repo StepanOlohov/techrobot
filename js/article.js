@@ -76,25 +76,7 @@ function renderArticle(article) {
   if (metaEl) {
     metaEl.innerHTML = `
       <span>📅 ${AppUtils.formatDate(article.date)}</span>
-      <span>✍️ ${AppUtils.escapeHtml(article.author)}</span>
       <span>⏱ ${article.readTime} мин. чтения</span>
-      <span>👁 ${AppUtils.formatNumber(article.views)} просмотров</span>
-    `;
-  }
-
-  // Биография автора
-  const authorEl = document.getElementById('articleAuthor');
-  if (authorEl && article.authorBio) {
-    authorEl.innerHTML = `
-      <div class="author-block" style="display:flex;align-items:center;gap:1rem;padding:1.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:2rem;">
-        <div style="width:52px;height:52px;background:var(--gradient-primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:#000;flex-shrink:0;">
-          ${article.author.charAt(0)}
-        </div>
-        <div>
-          <div style="font-weight:700;color:var(--text-primary);">${AppUtils.escapeHtml(article.author)}</div>
-          <div style="font-size:0.85rem;color:var(--text-muted);">${AppUtils.escapeHtml(article.authorBio)}</div>
-        </div>
-      </div>
     `;
   }
 
