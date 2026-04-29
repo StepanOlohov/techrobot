@@ -60,9 +60,14 @@ function renderArticle(article) {
   if (imgContainer) {
     const fallback = `<div class="article-img-placeholder article-img-${article.category}" style="aspect-ratio:21/9;border-radius:var(--radius-xl);"><span style="font-size:6rem;">${AppUtils.getCategoryIcon(article.category)}</span></div>`;
 
-    imgContainer.innerHTML = article.image
-      ? `<img src="${AppUtils.escapeHtml(article.image)}" alt="${AppUtils.escapeHtml(article.title)}" style="width:100%;aspect-ratio:21/9;object-fit:cover;border-radius:var(--radius-xl);" onerror="this.outerHTML=\`${fallback.replace(/`/g, '\\`')}\`">`
-      : fallback;
+    if (article.image) {
+      imgContainer.innerHTML = `<img src="${AppUtils.escapeHtml(article.image)}" alt="${AppUtils.escapeHtml(article.title)}" style="width:100%;aspect-ratio:21/9;object-fit:cover;border-radius:var(--radius-xl);">`;
+      // Если картинка не загрузилась — заменяем на emoji-плейсхолдер
+      const imgEl = imgContainer.querySelector('img');
+      if (imgEl) imgEl.addEventListener('error', () => { imgContainer.innerHTML = fallback; });
+    } else {
+      imgContainer.innerHTML = fallback;
+    }
   }
 
   // Категория
