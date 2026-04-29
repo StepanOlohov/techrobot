@@ -201,16 +201,23 @@ function sortArticles(articles, sortKey) {
 function handleFavClick(event, articleId, btn) {
   event.preventDefault();
   event.stopPropagation();
-  if (typeof toggleFavorite !== 'function') {
+
+  // Проверяем авторизацию ДО вызова toggleFavorite,
+  // иначе нельзя отличить "не залогинен" от "убрано из избранного"
+  // — оба случая возвращают false.
+  if (typeof getCurrentUser !== 'function' || !getCurrentUser()) {
     AppUtils.showToast('Войдите в аккаунт', 'info');
     return;
   }
+
   const added = toggleFavorite(articleId);
-  if (added !== false) {
-    btn.classList.toggle('active', added);
-    btn.innerHTML = added ? '❤️' : '🤍';
-    AppUtils.showToast(added ? 'Добавлено в избранное' : 'Убрано из избранного', added ? 'success' : 'info');
-  }
+  btn.classList.toggle('active', added);
+  btn.innerHTML = added ? '❤️' : '🤍';
+  btn.title = added ? 'Убрать из избранного' : 'Добавить в избранное';
+  AppUtils.showToast(
+    added ? 'Добавлено в избранное' : 'Убрано из избранного',
+    added ? 'success' : 'info'
+  );
 }
 
 window.handleFavClick = handleFavClick;
