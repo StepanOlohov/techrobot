@@ -55,14 +55,14 @@ function renderArticle(article) {
     `;
   }
 
-  // Изображение-заглушка
+  // Большое изображение шапки статьи (с fallback на emoji-плейсхолдер)
   const imgContainer = document.getElementById('articleHeroImg');
   if (imgContainer) {
-    imgContainer.innerHTML = `
-      <div class="article-img-placeholder article-img-${article.category}" style="aspect-ratio:21/9;border-radius:var(--radius-xl);">
-        <span style="font-size:6rem;">${AppUtils.getCategoryIcon(article.category)}</span>
-      </div>
-    `;
+    const fallback = `<div class="article-img-placeholder article-img-${article.category}" style="aspect-ratio:21/9;border-radius:var(--radius-xl);"><span style="font-size:6rem;">${AppUtils.getCategoryIcon(article.category)}</span></div>`;
+
+    imgContainer.innerHTML = article.image
+      ? `<img src="${AppUtils.escapeHtml(article.image)}" alt="${AppUtils.escapeHtml(article.title)}" style="width:100%;aspect-ratio:21/9;object-fit:cover;border-radius:var(--radius-xl);" onerror="this.outerHTML=\`${fallback.replace(/`/g, '\\`')}\`">`
+      : fallback;
   }
 
   // Категория
@@ -157,11 +157,13 @@ function renderRelated(current, allArticles) {
 
   container.innerHTML = related.map(a => {
     const badgeClass = AppUtils.getCategoryBadgeClass(a.category);
+    const icon = AppUtils.getCategoryIcon(a.category);
+    const imgHtml = a.image
+      ? `<img src="${AppUtils.escapeHtml(a.image)}" alt="${AppUtils.escapeHtml(a.title)}" class="article-card-img" loading="lazy" onerror="this.outerHTML='<div class=\\'article-img-placeholder article-img-${a.category}\\'><span style=\\'font-size:2.5rem;\\'>${icon}</span></div>'">`
+      : `<div class="article-img-placeholder article-img-${a.category}"><span style="font-size:2.5rem;">${icon}</span></div>`;
     return `
       <a href="article.html?id=${a.id}" class="article-card" style="text-decoration:none;">
-        <div class="article-img-placeholder article-img-${a.category}">
-          <span style="font-size:2.5rem;">${AppUtils.getCategoryIcon(a.category)}</span>
-        </div>
+        ${imgHtml}
         <div class="article-card-body">
           <div class="article-card-meta">
             <span class="badge ${badgeClass}">${AppUtils.escapeHtml(a.categoryLabel)}</span>

@@ -75,12 +75,14 @@ function buildArticleCard(article) {
   const date = AppUtils.formatDate(article.date);
   const isFav = typeof isFavorite === 'function' ? isFavorite(article.id) : false;
 
+  const imgHtml = article.image
+    ? `<img src="${AppUtils.escapeHtml(article.image)}" alt="${AppUtils.escapeHtml(article.title)}" class="article-card-img" loading="lazy" onerror="this.outerHTML='<div class=\\'article-img-placeholder article-img-${article.category}\\'><span style=\\'font-size:3rem;\\'>${icon}</span></div>'">`
+    : `<div class="article-img-placeholder article-img-${article.category}"><span style="font-size:3rem;">${icon}</span></div>`;
+
   return `
     <article class="article-card fade-in" aria-label="${AppUtils.escapeHtml(article.title)}">
       <a href="article.html?id=${article.id}" tabindex="-1" aria-hidden="true">
-        <div class="article-img-placeholder article-img-${article.category}">
-          <span style="font-size:3rem;">${icon}</span>
-        </div>
+        ${imgHtml}
       </a>
       <div class="article-card-body">
         <div class="article-card-meta">

@@ -300,12 +300,14 @@ function buildMiniArticleCard(article) {
   const icon = AppUtils.getCategoryIcon(article.category);
   const isFav = typeof isFavorite === 'function' ? isFavorite(article.id) : false;
 
+  const imgHtml = article.image
+    ? `<img src="${AppUtils.escapeHtml(article.image)}" alt="${AppUtils.escapeHtml(article.title)}" class="article-card-img" loading="lazy" onerror="this.outerHTML='<div class=\\'article-img-placeholder article-img-${article.category}\\'><span style=\\'font-size:2.5rem;\\'>${icon}</span></div>'">`
+    : `<div class="article-img-placeholder article-img-${article.category}"><span style="font-size:2.5rem;">${icon}</span></div>`;
+
   return `
     <article class="article-card">
       <a href="article.html?id=${article.id}">
-        <div class="article-img-placeholder article-img-${article.category}">
-          <span style="font-size:2.5rem;">${icon}</span>
-        </div>
+        ${imgHtml}
       </a>
       <div class="article-card-body">
         <div class="article-card-meta">
