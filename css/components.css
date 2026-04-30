@@ -48,12 +48,9 @@
 .header-logo-icon {
   width: 36px;
   height: 36px;
-  background: var(--gradient-primary);
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
+  object-fit: cover;
+  display: block;
 }
 
 .header-logo-text {

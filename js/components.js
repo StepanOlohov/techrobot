@@ -50,7 +50,7 @@ function buildHeaderHTML(currentPage) {
       <div class="header-inner">
         <!-- Логотип -->
         <a href="index.html" class="header-logo" aria-label="TechRobot — главная">
-          <div class="header-logo-icon" aria-hidden="true">⚡</div>
+          <img src="favicon.png" alt="" class="header-logo-icon" aria-hidden="true">
           <span class="header-logo-text">Tech<span>Robot</span></span>
         </a>
 
