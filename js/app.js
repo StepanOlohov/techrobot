@@ -40,22 +40,6 @@ function formatDateShort(dateStr) {
 }
 
 /**
- * Форматирует дату и время для сообщений форума
- * @param {string} isoStr - ISO строка даты
- * @returns {string} - отформатированная строка
- */
-function formatDateTime(isoStr) {
-  if (!isoStr) return '';
-  const date = new Date(isoStr);
-  const d = date.getDate().toString().padStart(2, '0');
-  const m = (date.getMonth() + 1).toString().padStart(2, '0');
-  const y = date.getFullYear();
-  const h = date.getHours().toString().padStart(2, '0');
-  const min = date.getMinutes().toString().padStart(2, '0');
-  return `${d}.${m}.${y} в ${h}:${min}`;
-}
-
-/**
  * Форматирует большие числа (1000 -> 1K)
  * @param {number} num - число
  * @returns {string} - форматированное число
@@ -349,7 +333,6 @@ window.showToast = showToast;
 window.AppUtils = {
   formatDate,
   formatDateShort,
-  formatDateTime,
   formatNumber,
   getCategoryBadgeClass,
   getCategoryIcon,

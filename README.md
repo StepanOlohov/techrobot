@@ -1,6 +1,5 @@
 # TechRobot — Информационный сайт о технологиях и робототехнике
 
-> **Дипломная (выпускная квалификационная) работа**  
 > Стек: HTML5 · CSS3 · JavaScript ES6+ · Node.js · Express · MySQL · JWT  
 > Без сторонних фронтенд-фреймворков
 
@@ -238,8 +237,9 @@ python -m http.server 8080
 
 ## Автор
 
-Дипломная работа по дисциплине **«Веб-разработка»**.  
-Выполнена с использованием: HTML5, CSS3, JavaScript ES6+, Node.js, Express, MySQL.
+**Олохов Степан** · Full-stack разработчик · Telegram [@D3alThug](https://t.me/D3alThug)
+
+Стек: HTML5, CSS3, JavaScript ES6+, Node.js, Express, MySQL.
 
 ---
 
