@@ -74,7 +74,7 @@
         <!-- Предупреждение -->
         <div class="video-notice">
           <span>ℹ️</span>
-          Видео загружается с YouTube. При первом нажатии на плеер может потребоваться подключение к интернету.
+          Видео загружается с RuTube. При первом нажатии на плеер может потребоваться подключение к интернету.
         </div>
 
         <!-- Фильтры -->
@@ -137,11 +137,13 @@
       return `
         <div class="video-card fade-in">
           <div class="video-embed-wrapper">
-            <!-- iframe с YouTube (lazy loading) -->
+            <!-- iframe с RuTube (lazy loading) -->
             <iframe
-              src="https://www.youtube.com/embed/${AppUtils.escapeHtml(video.youtubeId)}?rel=0&modestbranding=1"
+              src="https://rutube.ru/play/embed/${AppUtils.escapeHtml(video.rutubeId)}"
               title="${AppUtils.escapeHtml(video.title)}"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="clipboard-write; autoplay"
+              webkitAllowFullScreen
+              mozallowfullscreen
               allowfullscreen
               loading="lazy"
               aria-label="${AppUtils.escapeHtml(video.title)}"
