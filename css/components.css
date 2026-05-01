@@ -1233,3 +1233,129 @@
     text-align: left;
   }
 }
+
+/* =============================================
+   Адаптивность — маленькие телефоны (≤ 480px)
+   ============================================= */
+@media (max-width: 480px) {
+  /* Шапка — компактнее (высоту оставляем 70px чтобы sticky-фильтры
+     других страниц с top:70px корректно работали) */
+  .header-logo-text {
+    font-size: 1rem;
+  }
+  .header-logo-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Hero — меньше пространства, мелкие элементы */
+  .hero {
+    padding: 90px 0 40px;
+  }
+  .hero-label {
+    font-size: 0.78rem;
+    padding: 0.4rem 0.85rem;
+  }
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-actions .btn {
+    width: 100%;
+  }
+  .hero-stats {
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .hero-stat-number {
+    font-size: 1.6rem;
+  }
+  .hero-stat-label {
+    font-size: 0.72rem;
+  }
+
+  /* Карточки — компактнее */
+  .article-card-body,
+  .robot-card-body,
+  .video-card-body {
+    padding: 1rem;
+  }
+  .article-card-title,
+  .robot-card-name,
+  .video-card-title {
+    font-size: 0.95rem;
+  }
+  .article-card-preview,
+  .robot-card-desc,
+  .video-card-desc {
+    font-size: 0.82rem;
+  }
+
+  /* Профиль */
+  .profile-header {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+  .profile-avatar {
+    width: 70px;
+    height: 70px;
+    font-size: 1.6rem;
+  }
+  .profile-name {
+    font-size: 1.2rem;
+  }
+  .profile-stats {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .profile-stat-number {
+    font-size: 1.1rem;
+  }
+
+  /* Фильтр-кнопки — компактнее, в колонку при перетекании */
+  .filter-btn {
+    font-size: 0.78rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  /* Подвал */
+  .footer {
+    padding: 2.5rem 0 1.5rem;
+  }
+  .footer-about-title {
+    font-size: 1.1rem;
+  }
+  .social-links {
+    gap: 0.5rem;
+  }
+}
+
+/* =============================================
+   Адаптивность — большие десктопы (≥ 1440px)
+   ============================================= */
+@media (min-width: 1440px) {
+  /* Подвал использует освободившееся место */
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 4rem;
+  }
+
+  /* Hero крупнее */
+  .hero-stats {
+    gap: 4rem;
+  }
+}
+
+/* =============================================
+   Адаптивность — сверхширокие мониторы (≥ 1920px)
+   ============================================= */
+@media (min-width: 1920px) {
+  /* Hero — ещё больше воздуха */
+  .hero {
+    min-height: 90vh;
+  }
+  .hero-stats {
+    gap: 5rem;
+    margin-top: 5rem;
+  }
+}

@@ -33,6 +33,13 @@
       gap: 1rem;
     }
 
+    /* --- Превью роботов (адаптивная сетка) --- */
+    .robots-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
     /* --- Секция статистики (hero) --- */
     .hero-stats {
       gap: 2.5rem;
@@ -87,6 +94,9 @@
       .categories-grid {
         grid-template-columns: repeat(3, 1fr);
       }
+      .robots-preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
       .content-grid {
         grid-template-columns: 1fr;
       }
@@ -94,6 +104,25 @@
     @media (max-width: 768px) {
       .categories-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 480px) {
+      .categories-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      .robots-preview-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .cta-banner {
+        padding: 2rem 1.25rem;
+      }
+    }
+    /* Сверхширокие — больше воздуха */
+    @media (min-width: 1920px) {
+      .robots-preview-grid {
+        gap: 2rem;
       }
     }
   </style>
@@ -262,7 +291,7 @@
         </div>
 
         <!-- Горизонтальный список роботов -->
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;" id="robotsPreview">
+        <div id="robotsPreview" class="robots-preview-grid">
           <!-- Карточки роботов (статичные для главной, без JS) -->
           <div class="robot-card fade-in" onclick="location.href='robots.html?id=1'" style="cursor:pointer;">
             <div class="robot-card-img-wrapper">
