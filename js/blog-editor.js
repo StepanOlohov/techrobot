@@ -179,24 +179,98 @@ function initTabs() {
   });
 }
 
+/**
+ * Рендер превью статьи в том же виде, в каком её увидят читатели
+ * на странице blog-post.html: обложка, заголовок, мета (автор/дата/категория),
+ * описание, контент.
+ */
 function renderPreview() {
-  const raw = document.getElementById('fieldContent').value || '';
-  const el = document.getElementById('previewContent');
+  const el = document.getElementById('editorPreview');
   if (!el) return;
 
-  if (typeof DOMPurify === 'undefined') {
-    el.innerHTML = '<p style="color:var(--text-muted);">DOMPurify не загрузился — превью недоступно.</p>';
+  // Собираем все поля формы
+  const title    = document.getElementById('fieldTitle').value.trim();
+  const category = document.getElementById('fieldCategory').value;
+  const coverUrl = document.getElementById('fieldCover').value.trim();
+  const excerpt  = document.getElementById('fieldExcerpt').value.trim();
+  const rawContent = document.getElementById('fieldContent').value || '';
+
+  // Если ничего не заполнено — пустое состояние
+  if (!title && !excerpt && !rawContent) {
+    el.innerHTML = `
+      <div class="preview-empty">
+        <div style="font-size:3rem;margin-bottom:0.5rem;">👁</div>
+        <div>Заполните поля — увидите, как статья будет выглядеть на сайте</div>
+      </div>`;
     return;
   }
 
-  // В превью применяем ту же авто-разметку, что и при отправке
-  const wrapped = autoWrapParagraphs(raw);
+  // Текущий пользователь — для блока автора в превью
+  const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+  const authorName    = user ? user.name : 'Вы';
+  const authorAvatar  = user ? user.avatar : '';
+  const authorInitial = authorName.charAt(0).toUpperCase();
 
-  el.innerHTML = DOMPurify.sanitize(wrapped, {
-    ALLOWED_TAGS: ALLOWED_TAGS,
-    ALLOWED_ATTR: ALLOWED_ATTRS,
-    ALLOWED_URI_REGEXP: /^(https?:|mailto:|tel:)/i
-  });
+  // Сегодняшняя дата (для предварительного просмотра)
+  const today = AppUtils.formatDate(new Date().toISOString().slice(0, 10));
+
+  // Обложка или цветной плейсхолдер по категории
+  const coverHtml = coverUrl && /^https:\/\/\S+$/i.test(coverUrl)
+    ? `<img src="${AppUtils.escapeHtml(coverUrl)}" alt="" class="preview-cover" onerror="this.style.display='none';">`
+    : (category
+        ? `<div class="preview-cover-placeholder article-img-${category}">${AppUtils.getCategoryIcon(category)}</div>`
+        : `<div class="preview-cover-placeholder" style="background:var(--bg-dark2);color:var(--text-muted);">📝</div>`);
+
+  // Бейдж категории
+  const badgeHtml = category
+    ? `<span class="badge ${AppUtils.getCategoryBadgeClass(category)}">${getCategoryLabel(category)}</span>`
+    : '<span class="badge" style="background:var(--bg-dark2);color:var(--text-muted);">без категории</span>';
+
+  // Аватар автора
+  const avatarHtml = authorAvatar
+    ? `<img src="${AppUtils.escapeHtml(authorAvatar)}" alt="" class="blog-author-avatar">`
+    : `<div class="blog-author-avatar blog-author-avatar--initial">${authorInitial}</div>`;
+
+  // Санитизированный контент (с авто-абзацами)
+  const wrapped = autoWrapParagraphs(rawContent);
+  const safeContent = (typeof DOMPurify !== 'undefined')
+    ? DOMPurify.sanitize(wrapped, {
+        ALLOWED_TAGS: ALLOWED_TAGS,
+        ALLOWED_ATTR: ALLOWED_ATTRS,
+        ALLOWED_URI_REGEXP: /^(https?:|mailto:|tel:)/i
+      })
+    : '<p style="color:var(--text-muted);">DOMPurify не загрузился — превью контента недоступно.</p>';
+
+  el.innerHTML = `
+    ${coverHtml}
+    <div>${badgeHtml}</div>
+    <h1 class="preview-title">${AppUtils.escapeHtml(title) || '<span style="color:var(--text-muted);">Без заголовка</span>'}</h1>
+    ${excerpt ? `<p class="preview-excerpt">${AppUtils.escapeHtml(excerpt)}</p>` : ''}
+    <div class="preview-meta">
+      <div class="preview-author">
+        ${avatarHtml}
+        <span>${AppUtils.escapeHtml(authorName)}</span>
+      </div>
+      <span>📅 ${today}</span>
+      <span style="color:#ffcc00;">🟡 На модерации (предпросмотр)</span>
+    </div>
+    <div class="post-content">${safeContent || '<p style="color:var(--text-muted);">Текст ещё не написан…</p>'}</div>
+  `;
+}
+
+/**
+ * Метки категорий (та же таблица что в blog.js и blog-post.js).
+ */
+function getCategoryLabel(cat) {
+  const labels = {
+    ai:       'Искусственный интеллект',
+    robotics: 'Робототехника',
+    iot:      'Интернет вещей',
+    vrar:     'VR/AR',
+    biotech:  'Биотехнологии',
+    drones:   'Беспилотники'
+  };
+  return labels[cat] || cat;
 }
 
 /* =============================================

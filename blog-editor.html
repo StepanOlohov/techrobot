@@ -114,15 +114,71 @@
     }
     .cover-preview.visible { display: block; }
 
-    /* Режим превью контента */
+    /* Режим превью контента — повторяет вид blog-post.html */
     .editor-preview {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-xl);
-      padding: 2rem;
+      padding: 2.5rem;
       display: none;
     }
     .editor-preview.visible { display: block; }
+
+    .editor-preview .preview-cover {
+      width: 100%;
+      aspect-ratio: 21/9;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.25rem;
+      background: var(--bg-dark2);
+    }
+    .editor-preview .preview-cover-placeholder {
+      width: 100%;
+      aspect-ratio: 21/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.25rem;
+      font-size: 5rem;
+    }
+    .editor-preview .preview-title {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-family: var(--font-heading);
+      font-weight: 900;
+      line-height: 1.25;
+      margin: 0.5rem 0 1rem;
+    }
+    .editor-preview .preview-excerpt {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    .editor-preview .preview-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+    .editor-preview .preview-author {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--text-secondary);
+    }
+    .editor-preview .preview-empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
 
     .editor-actions {
       display: flex;
@@ -227,10 +283,8 @@
             </div>
           </form>
 
-          <!-- Превью -->
-          <div class="editor-preview post-wrapper" id="editorPreview">
-            <div class="post-content" id="previewContent"></div>
-          </div>
+          <!-- Превью (заполняется blog-editor.js → renderPreview()) -->
+          <div class="editor-preview" id="editorPreview"></div>
 
           <!-- Кнопки -->
           <div class="editor-actions">
