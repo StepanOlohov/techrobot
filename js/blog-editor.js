@@ -180,7 +180,7 @@ function initTabs() {
 }
 
 function renderPreview() {
-  const content = document.getElementById('fieldContent').value || '';
+  const raw = document.getElementById('fieldContent').value || '';
   const el = document.getElementById('previewContent');
   if (!el) return;
 
@@ -189,7 +189,10 @@ function renderPreview() {
     return;
   }
 
-  el.innerHTML = DOMPurify.sanitize(content, {
+  // В превью применяем ту же авто-разметку, что и при отправке
+  const wrapped = autoWrapParagraphs(raw);
+
+  el.innerHTML = DOMPurify.sanitize(wrapped, {
     ALLOWED_TAGS: ALLOWED_TAGS,
     ALLOWED_ATTR: ALLOWED_ATTRS,
     ALLOWED_URI_REGEXP: /^(https?:|mailto:|tel:)/i
@@ -204,12 +207,34 @@ function initSubmit() {
   if (btn) btn.addEventListener('click', submitForm);
 }
 
+/**
+ * Превращает обычный текст в HTML-абзацы, если пользователь не написал теги сам.
+ * - Если в тексте уже есть блочные теги (<p>, <h2>, <ul>...) — возвращаем как есть
+ * - Иначе разбиваем по пустым строкам → каждая часть оборачивается в <p>
+ * - Одиночные переносы внутри абзаца → <br>
+ */
+function autoWrapParagraphs(text) {
+  if (!text) return text;
+  if (/<(p|h[1-6]|ul|ol|li|blockquote|pre|div)[\s>/]/i.test(text)) {
+    return text; // пользователь уже разметил — не трогаем
+  }
+  return text
+    .split(/\n\s*\n+/)               // разбить на абзацы (пустая строка)
+    .map(p => p.trim())
+    .filter(Boolean)
+    .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+    .join('\n');
+}
+
 async function submitForm() {
   const title    = document.getElementById('fieldTitle').value.trim();
   const category = document.getElementById('fieldCategory').value;
   const coverUrl = document.getElementById('fieldCover').value.trim();
   const excerpt  = document.getElementById('fieldExcerpt').value.trim();
-  const content  = document.getElementById('fieldContent').value.trim();
+  let   content  = document.getElementById('fieldContent').value.trim();
+
+  // Автоматически оборачиваем обычный текст в <p> — пользователю удобнее
+  content = autoWrapParagraphs(content);
 
   // Клиентская валидация — дублирует серверную для UX
   const errors = [];

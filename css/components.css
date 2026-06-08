@@ -785,6 +785,22 @@
    ============================================= */
 
 /* Карточка статьи блога — на основе .article-card, с блоком автора внизу */
+.blog-card {
+  overflow: hidden;
+}
+.blog-card .article-card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.blog-card .article-card-preview {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
 .blog-card .blog-card-author {
   display: flex;
   align-items: center;
