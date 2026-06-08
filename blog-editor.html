@@ -120,8 +120,66 @@
       border-radius: var(--radius-xl);
       padding: 2.5rem;
       display: none;
+      overflow: hidden;
+      min-width: 0;
     }
     .editor-preview.visible { display: block; }
+
+    /* Перенос длинных слов внутри превью */
+    .editor-preview .preview-title,
+    .editor-preview .preview-excerpt,
+    .editor-preview .post-content,
+    .editor-preview .post-content * {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .editor-preview .post-content {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-primary);
+    }
+    .editor-preview .post-content h2,
+    .editor-preview .post-content h3,
+    .editor-preview .post-content h4 {
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin: 1.6rem 0 0.75rem;
+    }
+    .editor-preview .post-content h2 { font-size: 1.5rem; }
+    .editor-preview .post-content h3 { font-size: 1.25rem; }
+    .editor-preview .post-content h4 { font-size: 1.1rem; }
+    .editor-preview .post-content p { margin-bottom: 1rem; color: var(--text-secondary); }
+    .editor-preview .post-content ul,
+    .editor-preview .post-content ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+    .editor-preview .post-content li { margin-bottom: 0.4rem; color: var(--text-secondary); }
+    .editor-preview .post-content a { color: var(--primary); }
+    .editor-preview .post-content code {
+      background: var(--bg-dark2);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+    .editor-preview .post-content pre {
+      background: var(--bg-dark2);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    .editor-preview .post-content blockquote {
+      border-left: 3px solid var(--primary);
+      padding-left: 1rem;
+      margin: 1rem 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .editor-preview .post-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+      margin: 1rem 0;
+    }
 
     .editor-preview .preview-cover {
       width: 100%;
