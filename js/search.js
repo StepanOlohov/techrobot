@@ -11,6 +11,7 @@
 let allArticles = [];   // Кэш статей
 let allNews     = [];   // Кэш новостей
 let allRobots   = [];   // Кэш роботов
+let allBlog     = [];   // Кэш одобренных статей блога сообщества
 let dataLoaded  = false; // Флаг загруженности данных
 
 /* =============================================
@@ -24,14 +25,18 @@ let dataLoaded  = false; // Флаг загруженности данных
 async function loadSearchData() {
   if (dataLoaded) return;
   try {
-    const [articles, news, robots] = await Promise.all([
+    const [articles, news, robots, blog] = await Promise.all([
       fetch('data/articles.json').then(r => r.json()),
       fetch('data/news.json').then(r => r.json()),
-      fetch('data/robots.json').then(r => r.json())
+      fetch('data/robots.json').then(r => r.json()),
+      // Блог сообщества: одобренные статьи через REST API. limit=100 даёт
+      // достаточно широкий охват для поиска без перегрузки трафика.
+      fetch('/api/blog?limit=100').then(r => r.json()).catch(() => null)
     ]);
     allArticles = articles || [];
     allNews     = news     || [];
     allRobots   = robots   || [];
+    allBlog     = (blog && blog.success && blog.posts) ? blog.posts : [];
     dataLoaded  = true;
   } catch (err) {
     console.error('Ошибка загрузки данных поиска:', err);
@@ -60,7 +65,7 @@ function matchesQuery(text, query) {
  */
 function performSearch(query) {
   if (!query || query.trim().length < 2) {
-    return { articles: [], news: [], robots: [] };
+    return { articles: [], news: [], robots: [], blog: [] };
   }
 
   const q = query.trim();
@@ -91,7 +96,14 @@ function performSearch(query) {
     (r.tags || []).some(tag => matchesQuery(tag, q))
   );
 
-  return { articles, news, robots };
+  // Поиск по блогу сообщества (заголовок, описание, имя автора)
+  const blog = allBlog.filter(b =>
+    matchesQuery(b.title, q) ||
+    matchesQuery(b.excerpt, q) ||
+    matchesQuery(b.author_name, q)
+  );
+
+  return { articles, news, robots, blog };
 }
 
 /* =============================================
@@ -105,8 +117,9 @@ function performSearch(query) {
  * @param {string} query - поисковый запрос (для подсветки)
  */
 function renderSearchResults(container, results, query) {
-  const { articles, news, robots } = results;
-  const total = articles.length + news.length + robots.length;
+  const { articles, news, robots, blog } = results;
+  const blogCount = (blog || []).length;
+  const total = articles.length + news.length + robots.length + blogCount;
 
   if (total === 0) {
     container.innerHTML = `
@@ -168,7 +181,49 @@ function renderSearchResults(container, results, query) {
     `;
   }
 
+  // --- Блог сообщества ---
+  if (blogCount > 0) {
+    html += `
+      <div class="search-section">
+        <h3 class="search-section-title">
+          ✍️ Блог сообщества <span class="search-count-badge">${blogCount}</span>
+        </h3>
+        <div class="search-results-list">
+          ${blog.map(b => renderBlogResult(b, query)).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   container.innerHTML = html;
+}
+
+/**
+ * Генерирует HTML для одного результата-статьи блога сообщества
+ */
+function renderBlogResult(post, query) {
+  const badgeClass = AppUtils.getCategoryBadgeClass(post.category);
+  const icon       = AppUtils.getCategoryIcon(post.category);
+  const title      = AppUtils.highlightText(post.title, query);
+  const excerpt    = AppUtils.highlightText(post.excerpt, query);
+  const date       = AppUtils.formatDate(post.created_at);
+
+  return `
+    <a href="blog-post.html?id=${post.id}" class="search-result-item">
+      <div class="search-result-icon article-img-${post.category}">${icon}</div>
+      <div class="search-result-body">
+        <div class="search-result-meta">
+          <span class="badge ${badgeClass}">${AppUtils.escapeHtml(post.category)}</span>
+          <span class="badge" style="background:rgba(123,47,255,0.15);color:#a880ff;border:1px solid rgba(123,47,255,0.3);">
+            ✍️ Сообщество
+          </span>
+          <span class="search-result-date">${date}</span>
+        </div>
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-preview">${excerpt}</div>
+      </div>
+    </a>
+  `;
 }
 
 /**

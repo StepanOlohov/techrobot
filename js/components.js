@@ -15,8 +15,13 @@ const NAV_ITEMS = [
   { href: 'news.html',        label: 'Новости',   icon: '📰' },
   { href: 'robots.html',      label: 'Роботы',    icon: '🤖' },
   { href: 'videos.html',      label: 'Видео',     icon: '🎬' },
+  { href: 'blog.html',        label: 'Блог',      icon: '✍️' },
   { href: 'about.html',       label: 'О нас',     icon: '📌' }
 ];
+
+// Пункт админ-панели — добавляется в навигацию динамически, только если
+// у текущего пользователя isAdmin === true.
+const ADMIN_NAV_ITEM = { href: 'admin.html', label: '🛡 Админка', icon: '🛡' };
 
 /* =============================================
    Генерация HTML шапки
@@ -28,14 +33,20 @@ const NAV_ITEMS = [
  * @returns {string} - HTML шапки
  */
 function buildHeaderHTML(currentPage) {
+  // Если пользователь — админ, добавляем пункт «Админка»
+  const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+  const navItems = (user && user.isAdmin)
+    ? [...NAV_ITEMS, ADMIN_NAV_ITEM]
+    : NAV_ITEMS;
+
   // Генерируем пункты навигации
-  const navLinks = NAV_ITEMS.map(item => {
+  const navLinks = navItems.map(item => {
     const isActive = item.href === currentPage ? 'active' : '';
     return `<a href="${item.href}" class="nav-link ${isActive}">${item.label}</a>`;
   }).join('');
 
   // Генерируем пункты мобильного меню
-  const mobileLinks = NAV_ITEMS.map(item => {
+  const mobileLinks = navItems.map(item => {
     const isActive = item.href === currentPage ? 'active' : '';
     return `
       <a href="${item.href}" class="mobile-nav-link ${isActive}">
@@ -135,6 +146,7 @@ function buildFooterHTML() {
               <li><a href="news.html">Новости</a></li>
               <li><a href="robots.html">Каталог роботов</a></li>
               <li><a href="videos.html">Видеотека</a></li>
+              <li><a href="blog.html">Блог сообщества</a></li>
             </ul>
           </div>
 

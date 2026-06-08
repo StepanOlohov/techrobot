@@ -123,9 +123,17 @@ function initTabs() {
 
       if (target === 'favorites')  renderFavorites(user);
       if (target === 'history')    renderHistory(user);
+      if (target === 'blog')       renderMyBlogPosts();
       if (target === 'settings')   renderSettings(user);
     });
   });
+
+  // Поддержка ?tab=blog в URL (редирект после отправки статьи)
+  const urlTab = AppUtils.getUrlParam('tab');
+  if (urlTab) {
+    const btn = document.querySelector(`.profile-tab[data-tab="${urlTab}"]`);
+    if (btn) btn.click();
+  }
 }
 
 /* =============================================
@@ -336,6 +344,135 @@ function handleProfileFav(event, articleId, btn) {
     // Убираем карточку из списка
     btn.closest('.article-card').remove();
     AppUtils.showToast('Убрано из избранного', 'info');
+  }
+}
+
+/* =============================================
+   Панель "Мои статьи" (блог)
+   ============================================= */
+async function renderMyBlogPosts() {
+  const container = document.getElementById('blogPanel');
+  if (!container) return;
+
+  container.innerHTML = `<div class="loading-block"><div class="spinner"></div></div>`;
+
+  try {
+    const res = await fetch('/api/blog/my', {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('tr_token')}` }
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">⚠️</div>
+          <div class="empty-state-title">${AppUtils.escapeHtml(data.message || 'Не удалось загрузить статьи')}</div>
+        </div>`;
+      return;
+    }
+
+    renderBlogPanel(container, data.posts || []);
+  } catch (err) {
+    console.error('Ошибка загрузки моих статей:', err);
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">⚠️</div>
+        <div class="empty-state-title">Ошибка соединения с сервером</div>
+      </div>`;
+  }
+}
+
+function renderBlogPanel(container, posts) {
+  const writeBtnHtml = `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1.25rem;">
+      <a href="blog-editor.html" class="btn btn-primary btn-sm">✍️ Написать новую статью</a>
+    </div>`;
+
+  if (posts.length === 0) {
+    container.innerHTML = `
+      ${writeBtnHtml}
+      <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <div class="empty-state-title">Пока нет статей</div>
+        <div class="empty-state-text">Поделитесь своими знаниями — напишите первую статью для блога TechRobot.</div>
+      </div>`;
+    return;
+  }
+
+  const items = posts.map(buildMyBlogItem).join('');
+  container.innerHTML = `
+    ${writeBtnHtml}
+    <div style="display:flex;flex-direction:column;gap:0.75rem;">${items}</div>`;
+
+  // Обработчики удаления
+  posts.forEach(p => {
+    const delBtn = document.getElementById(`myBlogDel-${p.id}`);
+    if (delBtn) delBtn.addEventListener('click', () => deleteMyBlogPost(p.id));
+  });
+}
+
+function buildMyBlogItem(post) {
+  const date = AppUtils.formatDate(post.created_at);
+  const badge = {
+    pending:  { cls: 'badge--pending',  text: '🟡 На модерации' },
+    approved: { cls: 'badge--approved', text: '🟢 Опубликована' },
+    rejected: { cls: 'badge--rejected', text: '🔴 Отклонена' }
+  }[post.status] || { cls: '', text: post.status };
+
+  // Кнопка «Редактировать» доступна только для pending/rejected
+  const editBtn = post.status !== 'approved'
+    ? `<a href="blog-editor.html?id=${post.id}" class="btn btn-ghost btn-sm">✏️ Редактировать</a>`
+    : '';
+
+  const rejectionReason = post.status === 'rejected' && post.rejection_reason
+    ? `<div style="margin-top:0.5rem;padding:0.6rem 0.85rem;background:rgba(255,45,120,0.06);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--text-secondary);">
+         <strong style="color:#ff2d78;">Причина:</strong> ${AppUtils.escapeHtml(post.rejection_reason)}
+       </div>`
+    : '';
+
+  return `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+        <span class="badge ${badge.cls}">${badge.text}</span>
+        <span style="font-size:0.78rem;color:var(--text-muted);">📅 ${date}</span>
+        <span style="font-size:0.78rem;color:var(--text-muted);">👁 ${AppUtils.formatNumber(post.views)}</span>
+      </div>
+      <a href="blog-post.html?id=${post.id}" style="text-decoration:none;color:inherit;">
+        <h4 style="font-size:1.05rem;font-weight:700;color:var(--text-primary);margin:0 0 0.4rem;line-height:1.4;">
+          ${AppUtils.escapeHtml(post.title)}
+        </h4>
+      </a>
+      <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.6;margin:0;">
+        ${AppUtils.escapeHtml(post.excerpt)}
+      </p>
+      ${rejectionReason}
+      <div style="display:flex;gap:0.5rem;margin-top:0.85rem;flex-wrap:wrap;">
+        <a href="blog-post.html?id=${post.id}" class="btn btn-secondary btn-sm">👁 Открыть</a>
+        ${editBtn}
+        <button class="btn btn-ghost btn-sm" id="myBlogDel-${post.id}"
+          style="color:#ff2d78;border-color:rgba(255,45,120,0.3);">🗑 Удалить</button>
+      </div>
+    </div>`;
+}
+
+async function deleteMyBlogPost(id) {
+  if (!confirm('Удалить статью? Это действие необратимо.')) return;
+
+  try {
+    const res = await fetch(`/api/blog/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('tr_token')}` }
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      AppUtils.showToast('Статья удалена', 'success');
+      renderMyBlogPosts(); // перерисовать список
+    } else {
+      AppUtils.showToast(data.message || 'Не удалось удалить', 'error');
+    }
+  } catch (err) {
+    AppUtils.showToast('Ошибка соединения с сервером', 'error');
   }
 }
 

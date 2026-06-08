@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редактор статьи — TechRobot</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <!-- DOMPurify для санитизации превью -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/DOMPurify/3.0.8/purify.min.js"
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    .page-main { padding-top: 70px; }
+
+    .editor-hero {
+      padding: 2rem 0 1rem;
+      background: linear-gradient(180deg, var(--bg-dark2) 0%, var(--bg-dark) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .editor-wrapper {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .editor-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .editor-tab {
+      flex: 0 0 auto;
+      padding: 0.6rem 1.1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-family: var(--font-main);
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .editor-tab.active {
+      background: var(--primary);
+      color: var(--bg-dark);
+      border-color: var(--primary);
+      font-weight: 700;
+    }
+    .editor-tab:hover:not(.active) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .editor-form {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+    }
+
+    .editor-form__field {
+      margin-bottom: 1.25rem;
+    }
+    .editor-form__field label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: var(--text-primary);
+      font-size: 0.92rem;
+    }
+    .editor-form__field .required {
+      color: #ff2d78;
+    }
+
+    .editor-form__counter {
+      display: block;
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .editor-form__counter.over {
+      color: #ff2d78;
+      font-weight: 600;
+    }
+
+    .editor-form__hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      line-height: 1.5;
+    }
+
+    /* Поле content — моноширинное, большое */
+    #fieldContent {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      min-height: 360px;
+      resize: vertical;
+    }
+
+    /* Превью обложки */
+    .cover-preview {
+      margin-top: 0.5rem;
+      max-width: 320px;
+      aspect-ratio: 21/9;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      border: 1px solid var(--border);
+      display: none;
+    }
+    .cover-preview.visible { display: block; }
+
+    /* Режим превью контента */
+    .editor-preview {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      display: none;
+    }
+    .editor-preview.visible { display: block; }
+
+    .editor-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .editor-form, .editor-preview { padding: 1.25rem; }
+      .editor-actions { justify-content: stretch; }
+      .editor-actions .btn { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main class="page-main" id="main-content">
+
+    <div class="editor-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Навигация">
+          <a href="index.html">Главная</a>
+          <span class="breadcrumb-sep">›</span>
+          <a href="blog.html">Блог сообщества</a>
+          <span class="breadcrumb-sep">›</span>
+          <span id="modeCrumb">Новая статья</span>
+        </nav>
+        <h1 style="font-size:clamp(1.4rem,3vw,2rem);margin:0.5rem 0 0;" id="modeTitle">Новая статья</h1>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:0.3rem;">
+          Статья будет отправлена на модерацию администратору
+        </p>
+      </div>
+    </div>
+
+    <section class="section" aria-label="Редактор статьи">
+      <div class="container">
+        <div class="editor-wrapper">
+
+          <!-- Переключатель Редактировать / Превью -->
+          <div class="editor-tabs" role="tablist">
+            <button class="editor-tab active" data-mode="edit">✏️ Редактировать</button>
+            <button class="editor-tab" data-mode="preview">👁 Превью</button>
+          </div>
+
+          <!-- Форма -->
+          <form class="editor-form" id="editorForm" novalidate>
+
+            <div class="editor-form__field">
+              <label for="fieldTitle">Заголовок <span class="required">*</span></label>
+              <input type="text" id="fieldTitle" class="form-input" maxlength="200"
+                placeholder="Краткий цепляющий заголовок (5–200 символов)" required>
+              <span class="editor-form__counter" id="counterTitle">0 / 200</span>
+            </div>
+
+            <div class="editor-form__field">
+              <label for="fieldCategory">Категория <span class="required">*</span></label>
+              <select id="fieldCategory" class="form-select" required>
+                <option value="">— Выберите категорию —</option>
+                <option value="ai">🤖 Искусственный интеллект</option>
+                <option value="robotics">⚙️ Робототехника</option>
+                <option value="iot">📡 Интернет вещей</option>
+                <option value="vrar">🥽 VR/AR</option>
+                <option value="biotech">🧬 Биотехнологии</option>
+                <option value="drones">🚁 Беспилотники</option>
+              </select>
+            </div>
+
+            <div class="editor-form__field">
+              <label for="fieldCover">Обложка (URL изображения)</label>
+              <input type="url" id="fieldCover" class="form-input"
+                placeholder="https://example.com/image.jpg (необязательно)">
+              <span class="editor-form__hint">
+                Ссылка должна начинаться с <code>https://</code>. Рекомендуемое соотношение сторон 21:9.
+              </span>
+              <img id="coverPreview" class="cover-preview" alt="Превью обложки">
+            </div>
+
+            <div class="editor-form__field">
+              <label for="fieldExcerpt">Краткое описание <span class="required">*</span></label>
+              <textarea id="fieldExcerpt" class="form-textarea" rows="3" maxlength="500"
+                placeholder="2-3 предложения, что узнает читатель (20–500 символов)" required></textarea>
+              <span class="editor-form__counter" id="counterExcerpt">0 / 500</span>
+            </div>
+
+            <div class="editor-form__field">
+              <label for="fieldContent">Текст статьи <span class="required">*</span></label>
+              <textarea id="fieldContent" class="form-textarea"
+                placeholder="<h2>Введение</h2><p>Полный текст статьи (100–50000 символов).</p>" required></textarea>
+              <span class="editor-form__counter" id="counterContent">0 / 50000</span>
+              <div class="editor-form__hint">
+                Разрешённые теги: <code>&lt;p&gt;</code>, <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code>, <code>&lt;h4&gt;</code>,
+                <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;a href&gt;</code>, <code>&lt;ul&gt;</code>,
+                <code>&lt;ol&gt;</code>, <code>&lt;li&gt;</code>, <code>&lt;img src&gt;</code>, <code>&lt;code&gt;</code>,
+                <code>&lt;pre&gt;</code>, <code>&lt;blockquote&gt;</code>, <code>&lt;br&gt;</code>.
+                Картинки только по <code>https://</code>. Прочие теги будут удалены при сохранении.
+              </div>
+            </div>
+          </form>
+
+          <!-- Превью -->
+          <div class="editor-preview post-wrapper" id="editorPreview">
+            <div class="post-content" id="previewContent"></div>
+          </div>
+
+          <!-- Кнопки -->
+          <div class="editor-actions">
+            <a href="blog.html" class="btn btn-ghost">Отмена</a>
+            <button class="btn btn-primary" id="submitBtn">Отправить на модерацию</button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/blog-editor.js"></script>
+</body>
+</html>

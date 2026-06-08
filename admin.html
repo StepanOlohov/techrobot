@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель — TechRobot</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/DOMPurify/3.0.8/purify.min.js"
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    .page-main { padding-top: 70px; }
+
+    .admin-hero {
+      padding: 2rem 0 1rem;
+      background: linear-gradient(180deg, var(--bg-dark2) 0%, var(--bg-dark) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Очередь модерации */
+    .admin-queue {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 1024px;
+      margin: 0 auto;
+    }
+
+    .admin-queue__item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1.25rem;
+      align-items: flex-start;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .admin-queue__item.removing {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+
+    .admin-queue__meta {
+      display: flex;
+      gap: 0.85rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.6rem;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .admin-queue__title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 0.5rem;
+      line-height: 1.35;
+    }
+
+    .admin-queue__excerpt {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .admin-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex-shrink: 0;
+      min-width: 140px;
+    }
+
+    /* Цветные кнопки одобрить/отклонить */
+    .btn-approve {
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+    .btn-approve:hover { background: rgba(0, 255, 136, 0.25); }
+
+    .btn-reject {
+      background: rgba(255, 45, 120, 0.12);
+      color: #ff2d78;
+      border: 1px solid rgba(255, 45, 120, 0.3);
+    }
+    .btn-reject:hover { background: rgba(255, 45, 120, 0.2); }
+
+    /* Модалка предпросмотра — широкая со скроллом */
+    .preview-modal-content {
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    /* Доступ запрещён */
+    .access-denied {
+      text-align: center;
+      padding: 6rem 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .admin-queue__item {
+        grid-template-columns: 1fr;
+      }
+      .admin-actions { flex-direction: row; min-width: 0; }
+      .admin-actions .btn { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main class="page-main" id="main-content">
+
+    <div class="admin-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Навигация">
+          <a href="index.html">Главная</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>🛡 Админ-панель</span>
+        </nav>
+        <h1 style="font-size:clamp(1.4rem,3vw,2rem);margin:0.5rem 0 0;">
+          🛡 Модерация блога
+        </h1>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:0.3rem;">
+          Статьи на проверке —
+          <span id="queueCount" style="color:var(--primary);font-weight:600;">…</span>
+        </p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div id="adminContent">
+          <div class="admin-queue">
+            <div class="skeleton" style="height:140px;border-radius:var(--radius-lg);"></div>
+            <div class="skeleton" style="height:140px;border-radius:var(--radius-lg);"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
